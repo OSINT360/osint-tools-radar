@@ -21,9 +21,6 @@ This file tracks public repositories that extend AI agents with investigative wo
 > Only repositories with public source code and identifiable implementation are included. Prompt lists, link-only collections, closed services, and repository stubs are excluded.
 
 > [!NOTE]
-> **Owner exception:** [OSINT360 GPT](https://github.com/oryon-osint/OSINT360-GPT) is retained at the catalogue owner's request as a public custom GPT configuration even though it does not meet the implementation rule applied to other entries.
-
-> [!NOTE]
 > This is a young and fast-moving ecosystem. Low or zero star counts do not disqualify a project when its repository already contains a meaningful implementation. Metadata and compatibility claims were last verified on **2026-07-15**.
 
 <a id="contents"></a>
