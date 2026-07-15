@@ -4,7 +4,7 @@
   <h1>Emerging OSINT Projects</h1>
   <p>An automatically updated watchlist of early-stage open-source OSINT tools and the public source-code repositories that contain their implementations.</p>
   <p>
-    <a href="#projects"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging_projects-74-bf8700?style=flat-square"></a>
+    <a href="#projects"><img alt="Emerging projects: 76" src="https://img.shields.io/badge/emerging_projects-76-bf8700?style=flat-square"></a>
     <img alt="Target groups: 19" src="https://img.shields.io/badge/target_groups-19-8250df?style=flat-square">
     <img alt="Implementation verified" src="https://img.shields.io/badge/implementation-verified-1f883d?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-0969da?style=flat-square">
@@ -19,7 +19,7 @@
 - [Metadata conventions](#metadata-conventions)
 - [Main OSINT catalogue](README.md)
 - [Agentic AI OSINT](AGENTIC.md)
-- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Complete repository database](osint-repositories.csv) <sup>430 unique repositories</sup>
 
 <a id="selection-criteria"></a>
 
@@ -32,7 +32,7 @@ Projects listed here must have a public source-code repository, an identifiable 
 
 <a id="projects"></a>
 
-## Projects <sup>74 projects</sup>
+## Projects <sup>76 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -40,7 +40,7 @@ Projects listed here must have a public source-code repository, an identifiable 
 | [Crucix](https://github.com/calesthio/Crucix) | JavaScript | - | Watches multiple public intelligence sources and reports relevant changes. | 2026-03-14 | 2026-05-20 | 10,486 |
 | [Shadowbroker](https://github.com/BigBodyCobain/Shadowbroker) | Python | - | Tracks aircraft, satellites, seismic events, and other global activity. | 2026-03-05 | 2026-07-11 | 9,738 |
 | [Flowsint](https://github.com/reconurge/flowsint) | TypeScript | - | Explores investigation entities and enrichments in a local graph-based workspace. | 2025-01-31 | 2026-07-01 | 7,291 |
-| [Robin](https://github.com/apurvsinghgautam/robin) | Python | - | Supports assisted collection and analysis of dark web information. | 2025-04-08 | 2026-06-02 | 5,928 |
+| [Robin](https://github.com/apurvsinghgautam/robin) | Python | Tor; OpenAI, Claude, Gemini, Ollama, and compatible APIs | Refines queries, filters dark-web search results, and saves assisted investigation summaries. | 2025-04-08 | 2026-06-02 | 5,933 |
 | [Argus](https://github.com/jasonxtn/Argus) | Python | - | Combines multiple information gathering modules in a command-line toolkit. | 2024-10-01 | 2025-12-10 | 3,805 |
 | [gosearch](https://github.com/ibnaleem/gosearch) | Go | Cross-platform (300+) | Searches for a person's digital footprint across hundreds of websites. | 2024-11-09 | 2026-07-08 | 3,503 |
 | [user-scanner](https://github.com/kaifcodec/user-scanner) | Python | Cross-platform (310+ vectors) | Runs username and email discovery checks across many services. | 2025-10-19 | 2026-07-14 | 2,687 |
@@ -75,12 +75,12 @@ Projects listed here must have a public source-code repository, an identifiable 
 | [WhatsOSINT](https://github.com/HackUnderway/WhatsOSINT) | Python | WhatsApp | Retrieves public WhatsApp account details associated with a number. | 2024-11-19 | 2026-07-10 | 309 |
 | [Deanonymizer](https://github.com/ni5arga/deanonymizer) | TypeScript | - | Compares public posting history and behavioral timing patterns. | 2026-06-02 | 2026-06-15 | 309 |
 | [eye_of_web](https://github.com/MehmetYukselSekeroglu/eye_of_web) | Python | - | Provides an open-source workflow for face-based image search. | 2025-12-31 | 2026-01-18 | 302 |
-| [VoidAccess](https://github.com/KatrielMoses/voidaccess) | Python | - | Runs a self-hosted pipeline for dark web collection and graph analysis. | 2026-04-29 | 2026-07-08 | 288 |
+| [VoidAccess](https://github.com/KatrielMoses/voidaccess) | Python | Tor / .onion | Runs a self-hosted pipeline for dark-web collection, extraction, correlation, and graph analysis. | 2026-04-29 | 2026-07-08 | 288 |
 | [Voyage](https://github.com/clickswave/voyage) | Rust | - | Maintains state across passive and active subdomain discovery runs. | 2025-03-30 | 2025-09-05 | 257 |
 | [Nox Framework](https://github.com/nox-project/nox-framework) | Python | - | Automates identity pivots and risk analysis across public sources. | 2026-04-07 | 2026-05-06 | 239 |
 | [OGI](https://github.com/khashashin/ogi) | Python | - | Provides link analysis and open-source intelligence investigation workflows. | 2026-02-28 | 2026-06-14 | 237 |
+| [Darknet MCP Server](https://github.com/badchars/darknet-mcp-server) | MCP server | Tor / .onion; Model-agnostic (MCP) | Unifies dark-web search, breach, ransomware, malware, and blockchain intelligence tools for MCP clients. | 2026-06-23 | 2026-07-14 | 207 |
 | [MailAccess](https://github.com/KatrielMoses/MailAccess) | Python | - | Clusters identities and checks service usage and breach references for emails. | 2026-05-18 | 2026-07-13 | 206 |
-| [Darknet MCP Server](https://github.com/badchars/darknet-mcp-server) | MCP server | Model-agnostic (MCP) | Unifies dark-web, breach, ransomware, malware, and blockchain intelligence tools. | 2026-06-23 | 2026-07-14 | 206 |
 | [urx](https://github.com/hahwul/urx) | Rust | - | Extracts URLs from public web archives for later analysis. | 2025-03-28 | 2026-07-14 | 189 |
 | [Gitxray](https://github.com/kulkansecurity/gitxray) | Python | GitHub | Uses public GitHub APIs for account, repository, and contribution analysis. | 2024-08-06 | 2026-01-09 | 182 |
 | [netscout](https://github.com/caio-ishikawa/netscout) | Go | - | Crawls from a seed URL to find domains, paths, endpoints, and files. | 2024-03-28 | 2024-04-05 | 182 |
@@ -101,9 +101,11 @@ Projects listed here must have a public source-code repository, an identifiable 
 | [AtDork](https://github.com/amnottdevv/atdork) | Python | - | Automates multi-engine search queries with rate and failure controls. | 2026-06-07 | 2026-07-09 | 25 |
 | [Near](https://github.com/SamueleAmato/Near) | Python | - | Provides username scanning, social scraping, phone lookup, and search-query generation modules. | 2025-07-12 | 2025-12-20 | 22 |
 | [Wayback Archive](https://github.com/GeiserX/Wayback-Archive) | Python | - | Downloads complete archived websites with their referenced assets. | 2025-12-11 | 2026-07-01 | 21 |
+| [Sicry](https://github.com/JacobJandon/Sicry) | Python + MCP | Tor / .onion; MCP and AI agents | Checks Tor health, rotates identity, searches onion engines, fetches known services, and exposes optional agent-assisted analysis. | 2026-03-14 | 2026-07-01 | 16 |
 | [Vantage](https://github.com/thometnanni/vantage) | Elixir | - | Reconstructs image and video viewpoints inside three-dimensional environments. | 2024-11-15 | 2026-05-13 | 14 |
 | [Abster Intelligence](https://github.com/frangelbarrera/Abster-Intelligence) | TypeScript | - | Provides a local-first workspace for evidence, relationship graphs, timelines, OSINT lookups, and reports. | 2026-04-10 | 2026-07-01 | 13 |
 | [NEXUS](https://github.com/Kit4Some/NEXUsint) | Python | - | Combines live multi-INT feeds, knowledge graphs, maps, and assisted analysis in a desktop platform. | 2026-03-20 | 2026-04-17 | 10 |
+| [LeakRecon](https://github.com/egnake/LeakRecon) | Python | Tor / SOCKS5 | Runs Tor-routed leak reconnaissance with local history, change tracking, and report export. | 2026-05-18 | 2026-06-04 | 10 |
 | [OSINT-NEXUS](https://github.com/Muhib-Mehdi/OSINT-NEXUS) | Python | - | Combines multi-target collection, entity correlation, graphs, and reporting in a desktop application. | 2025-12-30 | 2026-01-04 | 7 |
 | [Discord Inspector](https://github.com/Euronymou5/Discord-Inspector) | Python | Discord | Retrieves public user, server, and application metadata from Discord identifiers. | 2024-12-03 | 2024-12-05 | 6 |
 | [PolyShadow](https://github.com/Ha1o/PolyShadow) | Python | - | Monitors new Polymarket wallets for unusual high-value positions. | 2026-01-10 | 2026-02-23 | 2 |

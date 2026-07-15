@@ -57,6 +57,7 @@ README_SECTIONS = [
     ("Domain", "Domain"),
     ("IP Address", "IP Address"),
     ("URL", "URL"),
+    ("Dark Web", "Dark Web"),
     ("Image", "Image"),
     ("Location", "Location"),
     ("Company", "Company"),

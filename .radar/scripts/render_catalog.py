@@ -115,7 +115,10 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
         text = replace_toc_count(text, label, len(selected))
 
     readme_count = sum(counts.values())
-    social_count = sum(count for label, count in counts.items() if label in {item[0] for item in README_SECTIONS[12:]})
+    social_labels = {
+        label for label, category in README_SECTIONS if category.startswith("Social platforms / ")
+    }
+    social_count = sum(count for label, count in counts.items() if label in social_labels)
     emerging_count = len(rows_for_category(rows, "Emerging"))
     agentic_count = sum(len(rows_for_category(rows, category)) for _, category in AGENTIC_SECTIONS)
     total_entries = readme_count + emerging_count + agentic_count

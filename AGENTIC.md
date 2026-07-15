@@ -4,10 +4,10 @@
   <h1>Agentic AI OSINT</h1>
   <p>A catalogue of open-source skills, plugins, MCP servers, and AI-agent integrations, linked to the public source-code repositories that contain their implementations.</p>
   <p>
-    <a href="#osint-investigation-and-intelligence"><img alt="OSINT integrations: 48" src="https://img.shields.io/badge/OSINT_integrations-48-0969da?style=flat-square"></a>
+    <a href="#osint-investigation-and-intelligence"><img alt="OSINT integrations: 49" src="https://img.shields.io/badge/OSINT_integrations-49-0969da?style=flat-square"></a>
     <a href="#reconnaissance-and-threat-intelligence"><img alt="Recon and CTI: 30" src="https://img.shields.io/badge/recon_and_CTI-30-d1242f?style=flat-square"></a>
     <a href="#web-research-and-source-discovery"><img alt="Research integrations: 30" src="https://img.shields.io/badge/research_integrations-30-8250df?style=flat-square"></a>
-    <img alt="Total projects: 108" src="https://img.shields.io/badge/total_projects-108-bf8700?style=flat-square">
+    <img alt="Total projects: 109" src="https://img.shields.io/badge/total_projects-109-bf8700?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
   <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Open-source Repository Database</a></strong></p>
@@ -28,12 +28,12 @@ This file indexes public source-code repositories containing open-source integra
 ## Contents
 
 - [Compatibility labels](#compatibility-labels)
-- [OSINT investigation and intelligence](#osint-investigation-and-intelligence) <sup>48 projects</sup>
+- [OSINT investigation and intelligence](#osint-investigation-and-intelligence) <sup>49 projects</sup>
 - [Reconnaissance and threat intelligence](#reconnaissance-and-threat-intelligence) <sup>30 projects</sup>
 - [Web research and source discovery](#web-research-and-source-discovery) <sup>24 projects</sup>
 - [Academic and structured research](#academic-and-structured-research) <sup>6 projects</sup>
 - [Metadata conventions](#metadata-conventions)
-- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Complete repository database](osint-repositories.csv) <sup>430 unique repositories</sup>
 
 <a id="compatibility-labels"></a>
 
@@ -52,7 +52,7 @@ This file indexes public source-code repositories containing open-source integra
 
 <a id="osint-investigation-and-intelligence"></a>
 
-## 🔎 OSINT investigation and intelligence <sup>48 projects</sup>
+## 🔎 OSINT investigation and intelligence <sup>49 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -72,11 +72,12 @@ This file indexes public source-code repositories containing open-source integra
 | [xint](https://github.com/0xNyk/xint) | CLI + skill + MCP | X / Twitter; Multi-model | Searches, monitors, and exports public X data for agent-assisted investigations. | 2026-02-14 | 2026-07-04 | 215 |
 | [OSINT360 GPT](https://github.com/oryon-osint/OSINT360-GPT) | Custom GPT configuration | ChatGPT | Provides a public OSINT-oriented custom GPT configuration and supporting instructions. | 2024-05-23 | 2024-05-23 | 107 |
 | [OSINT Skill](https://github.com/smixs/osint-skill) | Skill | Multi-model | Runs phased people research with source grading, correlation, and report generation. | 2026-03-10 | 2026-03-10 | 80 |
-| [OnionClaw](https://github.com/JacobJandon/OnionClaw) | Skill + CLI | OpenClaw | Adds Tor search, hidden-service retrieval, crawling, and export workflows to OpenClaw. | 2026-03-14 | 2026-07-01 | 62 |
+| [OnionClaw](https://github.com/JacobJandon/OnionClaw) | Skill + CLI | Tor / .onion; OpenClaw | Adds Tor search, hidden-service retrieval, crawling, and export workflows to OpenClaw. | 2026-03-14 | 2026-07-01 | 61 |
 | [MCP dnstwist](https://github.com/w0h1v/mcp-dnstwist) | MCP server | Model-agnostic (MCP) | Exposes look-alike domain discovery for phishing and impersonation investigations. | 2024-12-19 | 2025-03-03 | 51 |
 | [OSINT AI](https://github.com/dkyazzentwatwa/osint-ai) | Skill pack | Generic AI agents | Provides guided people, domain, organization, breach, and evidence-analysis workflows. | 2026-02-27 | 2026-03-07 | 44 |
 | [MCP OSINT Server](https://github.com/himanshusanecha/mcp-osint-server) | MCP server | Model-agnostic (MCP) | Offers MCP tools for public intelligence lookups and investigative pivots. | 2025-03-12 | 2025-03-12 | 44 |
 | [deep-recon](https://github.com/kvarnelis/deep-recon) | Skill | Claude Code + Obsidian | Coordinates multi-agent research and stores reconnaissance findings in Obsidian. | 2026-02-18 | 2026-02-21 | 40 |
+| [Sicry](https://github.com/JacobJandon/Sicry) | Python + MCP | Tor / .onion; MCP and AI agents | Checks Tor health, rotates identity, searches onion engines, fetches known services, and exposes optional agent-assisted analysis. | 2026-03-14 | 2026-07-01 | 16 |
 | [OSINT Agent Skills](https://github.com/frangelbarrera/osint-agent-skills) | Skills + MCP | Multi-model | Combines OSINT playbooks, agent instructions, report templates, and MCP tool definitions. | 2026-06-27 | 2026-07-01 | 11 |
 | [OSINT AI Agent](https://github.com/sumba101/OSINT-AI-Agent) | Agent + skills | Claude | Orchestrates Holehe, Sherlock, and GHunt for person-focused investigations. | 2026-01-11 | 2026-01-11 | 7 |
 | [Newsroom Extension](https://github.com/ehurrn/newsroom-extension) | Skill pack | Multi-model | Supports investigative journalism, FOIA work, corporate research, verification, and editorial review. | 2026-04-06 | 2026-06-22 | 6 |
@@ -126,7 +127,7 @@ This file indexes public source-code repositories containing open-source integra
 | [Recon Skills](https://github.com/uphiago/recon-skills) | Skill pack | Agent Skills standard | Provides field-oriented recon, dorking, secret discovery, asset mapping, and testing playbooks. | 2026-06-24 | 2026-07-08 | 754 |
 | [MCP Security Hub](https://github.com/FuzzingLabs/mcp-security-hub) | MCP collection | Model-agnostic (MCP) | Exposes containerized security tools for recon, threat intelligence, code, and binary analysis. | 2026-01-06 | 2026-04-08 | 728 |
 | [Transilience Community Tools](https://github.com/transilienceai/communitytools) | Skills + agents | Claude Code | Covers security reconnaissance, bug bounty, AI threat testing, validation, and reporting. | 2025-11-21 | 2026-07-13 | 409 |
-| [Darknet MCP Server](https://github.com/badchars/darknet-mcp-server) | MCP server | Model-agnostic (MCP) | Unifies dark-web, breach, ransomware, malware, and blockchain intelligence tools. | 2026-06-23 | 2026-07-14 | 206 |
+| [Darknet MCP Server](https://github.com/badchars/darknet-mcp-server) | MCP server | Tor / .onion; Model-agnostic (MCP) | Unifies dark-web search, breach, ransomware, malware, and blockchain intelligence tools for MCP clients. | 2026-06-23 | 2026-07-14 | 207 |
 | [Reversecore MCP](https://github.com/sjkim1127/Reversecore_MCP) | MCP server | Model-agnostic (MCP) | Connects agents to reverse engineering, malware, forensics, and vulnerability research tools. | 2025-11-10 | 2026-07-13 | 180 |
 | [Shodan MCP](https://github.com/w0h1v/mcp-shodan) | MCP server | Model-agnostic (MCP) | Provides device search, IP reconnaissance, DNS, CPE, and CVE intelligence. | 2024-12-12 | 2026-03-31 | 144 |
 | [VirusTotal MCP](https://github.com/w0h1v/mcp-virustotal) | MCP server | Model-agnostic (MCP) | Queries files, URLs, domains, IPs, and related security-analysis records. | 2024-12-13 | 2026-05-24 | 138 |

@@ -4,12 +4,12 @@
   <h1>OSINT Tools Radar</h1>
   <p>An automatically updated catalogue of open-source OSINT tools and the public source-code repositories that maintain them, organized by investigation target, platform, and emerging capability.</p>
   <p>
-    <a href="#table-of-contents"><img alt="Open-source tools: 256" src="https://img.shields.io/badge/open--source_tools-256-0969da?style=flat-square"></a>
-    <a href="EMERGING.md"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging-74-bf8700?style=flat-square"></a>
+    <a href="#table-of-contents"><img alt="Open-source tools: 270" src="https://img.shields.io/badge/open--source_tools-270-0969da?style=flat-square"></a>
+    <a href="EMERGING.md"><img alt="Emerging projects: 76" src="https://img.shields.io/badge/emerging-76-bf8700?style=flat-square"></a>
     <a href="#social-platforms"><img alt="Social platform entries: 104" src="https://img.shields.io/badge/social_platforms-104-8250df?style=flat-square"></a>
-    <a href="AGENTIC.md"><img alt="Agentic integrations: 108" src="https://img.shields.io/badge/agentic_integrations-108-d1242f?style=flat-square"></a>
-    <a href="osint-repositories.csv"><img alt="Source repositories: 420" src="https://img.shields.io/badge/source_repositories-420-1f883d?style=flat-square"></a>
-    <img alt="Catalogue entries: 438" src="https://img.shields.io/badge/catalogue_entries-438-8250df?style=flat-square">
+    <a href="AGENTIC.md"><img alt="Agentic integrations: 109" src="https://img.shields.io/badge/agentic_integrations-109-d1242f?style=flat-square"></a>
+    <a href="osint-repositories.csv"><img alt="Source repositories: 430" src="https://img.shields.io/badge/source_repositories-430-1f883d?style=flat-square"></a>
+    <img alt="Catalogue entries: 455" src="https://img.shields.io/badge/catalogue_entries-455-8250df?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
   <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Open-source Repository Database</a></strong></p>
@@ -40,7 +40,8 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 - **Infrastructure**
   - [Domain](#domain) <sup>22 projects</sup>
   - [IP Address](#ip-address) <sup>11 projects</sup>
-  - [URL](#url) <sup>24 projects</sup>
+  - [URL](#url) <sup>21 projects</sup>
+  - [Dark Web](#dark-web) <sup>18 projects</sup>
 - **Media and geography**
   - [Image](#image) <sup>36 projects</sup>
   - [Location](#location) <sup>5 projects</sup>
@@ -48,7 +49,7 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
   - [Company](#company) <sup>4 projects</sup>
   - [Cryptocurrency](#cryptocurrency) <sup>6 projects</sup>
 - **Cross-target tooling**
-  - [General](#general) <sup>21 projects</sup>
+  - [General](#general) <sup>20 projects</sup>
 - **Social platforms**
   - [Cross-platform](#cross-platform) <sup>19 projects</sup>
   - [X and Twitter](#x-and-twitter) <sup>7 projects</sup>
@@ -67,9 +68,9 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 - [Catalogue automation](#catalogue-automation)
 - [Reviewed source collections](#reviewed-source-collections)
 - [Metadata conventions](#metadata-conventions)
-- [Emerging projects](EMERGING.md) <sup>74 projects</sup>
-- [Agentic AI OSINT](AGENTIC.md) <sup>108 projects</sup>
-- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Emerging projects](EMERGING.md) <sup>76 projects</sup>
+- [Agentic AI OSINT](AGENTIC.md) <sup>109 projects</sup>
+- [Complete repository database](osint-repositories.csv) <sup>430 unique repositories</sup>
 
 ---
 
@@ -173,7 +174,7 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 
 <a id="url"></a>
 
-## 🔗 URL <sup>24 projects</sup>
+## 🔗 URL <sup>21 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -184,7 +185,6 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 | [httpx](https://github.com/projectdiscovery/httpx) | Go | - | Probes web targets at scale and reports HTTP, TLS, technology, and response metadata. | 2020-05-28 | 2026-07-13 | 10,169 |
 | [hakrawler](https://github.com/hakluke/hakrawler) | Go | - | Crawls web applications to discover endpoints, assets, and linked resources. | 2019-12-15 | 2024-12-21 | 5,090 |
 | [gau](https://github.com/lc/gau) | Go | - | Collects known URLs from public archives and threat intelligence sources. | 2020-02-25 | 2024-10-28 | 5,033 |
-| [TorBot](https://github.com/DedSecInside/TorBot) | Python | - | Crawls and indexes links discovered across Tor services. | 2017-05-17 | 2026-01-08 | 4,348 |
 | [Cariddi](https://github.com/edoardottt/cariddi) | Go | - | Crawls domains and extracts endpoints, secrets, tokens, and file references. | 2021-04-27 | 2026-07-03 | 3,456 |
 | [pagodo](https://github.com/opsdisk/pagodo) | Python | - | Automates Google dork collection and searches against a target. | 2016-08-19 | 2025-12-01 | 3,363 |
 | [waybackpack](https://github.com/jsvine/waybackpack) | Python | - | Downloads archived versions of a URL from the Wayback Machine. | 2016-04-11 | 2024-05-15 | 3,214 |
@@ -192,15 +192,40 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 | [waymore](https://github.com/xnl-h4ck3r/waymore) | Python | - | Collects archived URLs and responses from several public sources. | 2022-06-24 | 2026-06-11 | 2,690 |
 | [Mitaka](https://github.com/ninoseki/mitaka) | TypeScript | - | Adds browser searches for URLs, hashes, IP addresses, and other indicators. | 2018-02-09 | 2026-06-16 | 1,821 |
 | [BlackWidow](https://github.com/1N3/BlackWidow) | Python | - | Crawls a web application to collect intelligence and identify reachable paths. | 2018-01-06 | 2026-04-17 | 1,811 |
-| [OnionSearch](https://github.com/megadose/OnionSearch) | Python | - | Queries several Tor search engines and collects matching onion URLs. | 2020-03-18 | 2024-08-08 | 1,734 |
 | [urlhunter](https://github.com/utkusen/urlhunter) | Go | - | Finds URLs exposed through public URL-shortening services. | 2020-11-21 | 2025-01-23 | 1,684 |
-| [darkdump](https://github.com/josh0xA/darkdump) | Python | - | Searches and collects public results from dark web sources. | 2021-02-11 | 2026-04-08 | 1,640 |
 | [GooFuzz](https://github.com/m3n0sd0n4ld/GooFuzz) | Shell | - | Uses search-engine results to enumerate web paths, files, and parameters. | 2022-06-17 | 2025-12-21 | 1,577 |
 | [FavFreak](https://github.com/devanshbatham/FavFreak) | Python | - | Creates favicon hashes for finding related websites through internet search engines. | 2020-07-03 | 2023-08-29 | 1,293 |
 | [uDork](https://github.com/m3n0sd0n4ld/uDork) | Shell | - | Automates advanced search queries for exposed web information. | 2019-09-09 | 2022-06-20 | 849 |
 | [xurlfind3r](https://github.com/hueristiq/xurlfind3r) | Go | - | Discovers URLs for a domain through passive public sources. | 2021-05-13 | 2026-02-23 | 708 |
 | [waybackpy](https://github.com/akamhy/waybackpy) | Python | - | Provides a command-line and library interface to Wayback Machine APIs. | 2020-05-02 | 2022-03-15 | 594 |
 | [TheScrapper](https://github.com/champmq/TheScrapper) | Python | - | Crawls websites to extract email addresses, phone numbers, and social profile links. | 2021-05-07 | 2026-05-29 | 364 |
+
+<a id="dark-web"></a>
+
+## 🕸️ Dark Web <sup>18 projects</sup>
+
+Use this category as a layered collection workflow: **darkdump** for first-pass keyword discovery and saved result sets, **Sicry** for Tor health, identity rotation, multi-engine search, and targeted fetching, and **TorBot** only after a relevant onion service has been identified and needs link-tree or structure mapping.
+
+| Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
+|:---|:---:|:---:|:---|:---:|:---:|---:|
+| [Robin](https://github.com/apurvsinghgautam/robin) | Python | Tor; OpenAI, Claude, Gemini, Ollama, and compatible APIs | Refines queries, filters dark-web search results, and saves assisted investigation summaries. | 2025-04-08 | 2026-06-02 | 5,933 |
+| [TorBot](https://github.com/DedSecInside/TorBot) | Python | Tor / .onion | Crawls a known onion service and exports its link tree for structure mapping. | 2017-05-17 | 2026-01-08 | 4,346 |
+| [OnionScan](https://github.com/s-rah/onionscan) | Go | Tor / .onion | Analyzes onion services for operational-security exposures, identifiers, and service relationships. | 2016-04-08 | 2024-08-09 | 3,267 |
+| [OnionSearch](https://github.com/megadose/OnionSearch) | Python | Tor / .onion | Queries multiple Tor search engines for keyword-matched hidden services. | 2020-03-18 | 2024-08-08 | 1,734 |
+| [darkdump](https://github.com/josh0xA/darkdump) | Python | Tor and clearnet search engines | Runs first-pass keyword discovery across dark-web search engines and saves result sets for later review. | 2021-02-11 | 2026-04-08 | 1,640 |
+| [ransomwatch](https://github.com/joshhighet/ransomwatch) | HTML (archived) | Ransomware extortion sites | Aggregates claims published on ransomware-group extortion sites into structured public feeds. | 2021-08-09 | 2026-03-03 | 1,115 |
+| [AIL Framework](https://github.com/ail-project/ail-framework) | Python | Tor, I2P, chats, files, and feeds | Collects, crawls, processes, correlates, and analyzes unstructured information from Tor and other sources. | 2020-04-20 | 2026-07-15 | 979 |
+| [Ahmia](https://github.com/ahmia/ahmia-site) | Python | Tor, Django, and Elasticsearch | Provides an open-source search application and interface for indexed onion services. | 2016-05-23 | 2026-07-13 | 747 |
+| [Darkus](https://github.com/Lucksi/Darkus) | Python | Tor / .onion search engines | Queries multiple onion search engines for keyword-matched hidden services. | 2023-10-27 | 2026-02-21 | 682 |
+| [VoidAccess](https://github.com/KatrielMoses/voidaccess) | Python | Tor / .onion | Runs a self-hosted pipeline for dark-web collection, extraction, correlation, and graph analysis. | 2026-04-29 | 2026-07-08 | 288 |
+| [darc](https://github.com/JarryShaw/darc) | Python | Tor and proxy-based dark-web services | Crawls dark-web services, stores link and host data, and supports distributed collection workflows. | 2019-09-28 | 2026-07-11 | 225 |
+| [Darknet MCP Server](https://github.com/badchars/darknet-mcp-server) | MCP server | Tor / .onion; Model-agnostic (MCP) | Unifies dark-web search, breach, ransomware, malware, and blockchain intelligence tools for MCP clients. | 2026-06-23 | 2026-07-14 | 207 |
+| [Nexvision Darkweb Search Engine](https://github.com/NexvisionLab/Darkweb-search-engine) | Python | Tor, Elasticsearch, and Docker | Builds a self-hosted onion crawler, index, relationship view, and full-text search interface. | 2022-01-10 | 2024-12-26 | 137 |
+| [onion-lookup](https://github.com/ail-project/onion-lookup) | Python | Tor / .onion; AIL | Checks onion-service availability and retrieves associated metadata from an AIL instance. | 2024-10-03 | 2026-01-05 | 64 |
+| [OnionClaw](https://github.com/JacobJandon/OnionClaw) | Skill + CLI | Tor / .onion; OpenClaw | Adds Tor search, hidden-service retrieval, crawling, and export workflows to OpenClaw. | 2026-03-14 | 2026-07-01 | 61 |
+| [DarkSpider](https://github.com/PROxZIMA/DarkSpider) | Python | Tor / .onion | Crawls onion services through Tor and visualizes extracted link relationships. | 2022-07-31 | 2026-04-27 | 45 |
+| [Sicry](https://github.com/JacobJandon/Sicry) | Python + MCP | Tor / .onion; MCP and AI agents | Checks Tor health, rotates identity, searches onion engines, fetches known services, and exposes optional agent-assisted analysis. | 2026-03-14 | 2026-07-01 | 16 |
+| [LeakRecon](https://github.com/egnake/LeakRecon) | Python | Tor / SOCKS5 | Runs Tor-routed leak reconnaissance with local history, change tracking, and report export. | 2026-05-18 | 2026-06-04 | 10 |
 
 <a id="image"></a>
 
@@ -283,7 +308,7 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 
 <a id="general"></a>
 
-## 🧰 General <sup>21 projects</sup>
+## 🧰 General <sup>20 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -295,7 +320,6 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
 | [Mr.Holmes](https://github.com/Lucksi/Mr.Holmes) | Python | - | Combines multiple identity, domain, phone, and social investigation modules. | 2021-06-23 | 2026-02-21 | 3,844 |
 | [FOCA](https://github.com/ElevenPaths/FOCA) | C# | - | Extracts metadata and hidden information from public documents. | 2017-10-02 | 2022-12-08 | 3,588 |
 | [Datasploit](https://github.com/DataSploit/datasploit) | Python | - | Correlates OSINT findings across people, companies, domains, phones, and cryptocurrency. | 2016-05-23 | 2017-12-20 | 3,307 |
-| [OnionScan](https://github.com/s-rah/onionscan) | Go | - | Investigates operational security issues and relationships in Tor hidden services. | 2016-04-08 | 2016-10-30 | 3,267 |
 | [X-osint](https://github.com/TermuxHackz/X-osint) | Python | - | Runs phone, email, domain, VIN, and identity-oriented lookup modules. | 2023-03-11 | 2026-07-12 | 2,483 |
 | [sn0int](https://github.com/kpcyrd/sn0int) | Rust | - | Provides a semi-automatic OSINT framework with installable modules. | 2018-10-05 | 2026-05-15 | 2,482 |
 | [Watcher](https://github.com/thalesgroup-cert/Watcher) | JavaScript | - | Collects, enriches, and searches cyber threat intelligence with assisted analysis. | 2020-09-01 | 2026-07-13 | 1,336 |
