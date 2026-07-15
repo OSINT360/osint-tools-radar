@@ -117,6 +117,16 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     text = replace_number_badge(text, "Agentic integrations", "agentic_integrations", agentic_count)
     text = replace_number_badge(text, "CSV database", "CSV_database", len(rows))
     text = replace_number_badge(text, "Catalogue entries", "catalogue_entries", total_entries)
+    text = re.sub(
+        r"(\[Emerging projects\]\(EMERGING\.md\) <sup>)\d+\s+projects?(</sup>)",
+        rf"\g<1>{emerging_count} {count_label(emerging_count)}\2",
+        text,
+    )
+    text = re.sub(
+        r"(\[Agentic AI OSINT\]\(AGENTIC\.md\) <sup>)\d+\s+projects?(</sup>)",
+        rf"\g<1>{agentic_count} {count_label(agentic_count)}\2",
+        text,
+    )
     text = re.sub(r"(Complete CSV database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_verified_date(text, date)
 

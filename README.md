@@ -4,12 +4,12 @@
   <h1>OSINT Tools Radar</h1>
   <p>An automatically updated catalogue for efficiently monitoring the open-source OSINT tools market across investigation targets, social platforms, and emerging technologies.</p>
   <p>
-    <a href="#table-of-contents"><img alt="Catalogued projects: 210" src="https://img.shields.io/badge/catalogued-210-0969da?style=flat-square"></a>
-    <a href="EMERGING.md"><img alt="Emerging projects: 62" src="https://img.shields.io/badge/emerging-62-bf8700?style=flat-square"></a>
-    <a href="#social-platforms"><img alt="Social platform entries: 91" src="https://img.shields.io/badge/social_platforms-91-8250df?style=flat-square"></a>
+    <a href="#table-of-contents"><img alt="Catalogued projects: 224" src="https://img.shields.io/badge/catalogued-224-0969da?style=flat-square"></a>
+    <a href="EMERGING.md"><img alt="Emerging projects: 70" src="https://img.shields.io/badge/emerging-70-bf8700?style=flat-square"></a>
+    <a href="#social-platforms"><img alt="Social platform entries: 98" src="https://img.shields.io/badge/social_platforms-98-8250df?style=flat-square"></a>
     <a href="AGENTIC.md"><img alt="Agentic integrations: 108" src="https://img.shields.io/badge/agentic_integrations-108-d1242f?style=flat-square"></a>
-    <a href="osint-repositories.csv"><img alt="CSV database: 366" src="https://img.shields.io/badge/CSV_database-366-1f883d?style=flat-square"></a>
-    <img alt="Catalogue entries: 380" src="https://img.shields.io/badge/catalogue_entries-380-8250df?style=flat-square">
+    <a href="osint-repositories.csv"><img alt="CSV database: 388" src="https://img.shields.io/badge/CSV_database-388-1f883d?style=flat-square"></a>
+    <img alt="Catalogue entries: 402" src="https://img.shields.io/badge/catalogue_entries-402-8250df?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
   <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
@@ -37,36 +37,36 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 - **Infrastructure**
   - [Domain](#domain) <sup>22 projects</sup>
   - [IP Address](#ip-address) <sup>11 projects</sup>
-  - [URL](#url) <sup>22 projects</sup>
+  - [URL](#url) <sup>24 projects</sup>
 - **Media and geography**
-  - [Image](#image) <sup>6 projects</sup>
+  - [Image](#image) <sup>10 projects</sup>
   - [Location](#location) <sup>5 projects</sup>
 - **Organizations and assets**
   - [Company](#company) <sup>4 projects</sup>
   - [Cryptocurrency](#cryptocurrency) <sup>6 projects</sup>
 - **Cross-target tooling**
-  - [General](#general) <sup>20 projects</sup>
+  - [General](#general) <sup>21 projects</sup>
 - **Social platforms**
-  - [Cross-platform](#cross-platform) <sup>18 projects</sup>
-  - [X and Twitter](#x-and-twitter) <sup>4 projects</sup>
+  - [Cross-platform](#cross-platform) <sup>19 projects</sup>
+  - [X and Twitter](#x-and-twitter) <sup>7 projects</sup>
   - [Facebook](#facebook) <sup>2 projects</sup>
   - [Instagram](#instagram) <sup>9 projects</sup>
   - [LinkedIn](#linkedin) <sup>8 projects</sup>
   - [Reddit](#reddit) <sup>5 projects</sup>
   - [Telegram](#telegram) <sup>20 projects</sup>
-  - [TikTok](#tiktok) <sup>1 project</sup>
+  - [TikTok](#tiktok) <sup>2 projects</sup>
   - [YouTube](#youtube) <sup>3 projects</sup>
   - [Snapchat](#snapchat) <sup>2 projects</sup>
   - [WhatsApp](#whatsapp) <sup>2 projects</sup>
   - [Steam](#steam) <sup>3 projects</sup>
-  - [GitHub](#github) <sup>14 projects</sup>
+  - [GitHub](#github) <sup>16 projects</sup>
   - [Discord](#discord) <sup>0 projects</sup>
 - [Catalogue automation](#catalogue-automation)
 - [Reviewed source collections](#reviewed-source-collections)
 - [Metadata conventions](#metadata-conventions)
-- [Emerging projects](EMERGING.md) <sup>62 projects</sup>
+- [Emerging projects](EMERGING.md) <sup>70 projects</sup>
 - [Agentic AI OSINT](AGENTIC.md) <sup>108 projects</sup>
-- [Complete CSV database](osint-repositories.csv) <sup>366 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>388 unique repositories</sup>
 
 ---
 
@@ -170,7 +170,7 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 
 <a id="url"></a>
 
-## 🔗 URL <sup>22 projects</sup>
+## 🔗 URL <sup>24 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -178,6 +178,7 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 | [changedetection.io](https://github.com/dgtlmoon/changedetection.io) | Python | - | Monitors web pages and records content changes over time. | 2021-01-27 | 2026-07-13 | 32,316 |
 | [SingleFile](https://github.com/gildas-lormeau/SingleFile) | JavaScript | - | Saves a complete web page as one file for preservation and later analysis. | 2010-09-12 | 2026-02-24 | 21,818 |
 | [Photon](https://github.com/s0md3v/Photon) | Python | - | Crawls a supplied URL to collect links and related open-source data. | 2018-03-30 | 2026-02-10 | 13,036 |
+| [httpx](https://github.com/projectdiscovery/httpx) | Go | - | Probes web targets at scale and reports HTTP, TLS, technology, and response metadata. | 2020-05-28 | 2026-07-13 | 10,169 |
 | [hakrawler](https://github.com/hakluke/hakrawler) | Go | - | Crawls web applications to discover endpoints, assets, and linked resources. | 2019-12-15 | 2024-12-21 | 5,090 |
 | [gau](https://github.com/lc/gau) | Go | - | Collects known URLs from public archives and threat intelligence sources. | 2020-02-25 | 2024-10-28 | 5,033 |
 | [TorBot](https://github.com/DedSecInside/TorBot) | Python | - | Crawls and indexes links discovered across Tor services. | 2017-05-17 | 2026-01-08 | 4,348 |
@@ -196,16 +197,21 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 | [uDork](https://github.com/m3n0sd0n4ld/uDork) | Shell | - | Automates advanced search queries for exposed web information. | 2019-09-09 | 2022-06-20 | 849 |
 | [xurlfind3r](https://github.com/hueristiq/xurlfind3r) | Go | - | Discovers URLs for a domain through passive public sources. | 2021-05-13 | 2026-02-23 | 708 |
 | [waybackpy](https://github.com/akamhy/waybackpy) | Python | - | Provides a command-line and library interface to Wayback Machine APIs. | 2020-05-02 | 2022-03-15 | 594 |
+| [TheScrapper](https://github.com/champmq/TheScrapper) | Python | - | Crawls websites to extract email addresses, phone numbers, and social profile links. | 2021-05-07 | 2026-05-29 | 364 |
 
 <a id="image"></a>
 
-## 🖼️ Image <sup>6 projects</sup>
+## 🖼️ Image <sup>10 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [DeepFace](https://github.com/serengil/deepface) | Python | - | Performs face verification, recognition, search, and facial attribute analysis. | 2020-02-08 | 2026-06-29 | 23,109 |
 | [ExifTool](https://github.com/exiftool/exiftool) | Perl | - | Reads and writes metadata embedded in images and other file formats. | 2018-05-09 | 2026-05-27 | 4,871 |
+| [ImageHash](https://github.com/JohannesBuchner/imagehash) | Python | - | Calculates perceptual image hashes for similarity and duplicate-image comparison. | 2013-03-02 | 2025-04-17 | 3,852 |
 | [image-match](https://github.com/rhsimplex/image-match) | Python | - | Performs scalable perceptual image matching against indexed images. | 2016-03-08 | 2022-12-06 | 2,976 |
+| [RetinaFace](https://github.com/serengil/retinaface) | Python | - | Detects, aligns, and extracts faces from images for downstream comparison workflows. | 2021-04-25 | 2026-06-01 | 2,011 |
 | [ExifLooter](https://github.com/aydinnyunus/exiflooter) | Go | - | Finds geolocation metadata in local and remote images and maps the results. | 2022-07-30 | 2023-12-28 | 494 |
+| [gallery-dl](https://codeberg.org/mikf/gallery-dl) | Python | Cross-platform image sites | Downloads image galleries and media collections from supported websites. | 2026-03-24 | 2026-07-15 | 380 |
 | [GVision](https://github.com/GONZOsint/gvision) | Python | - | Uses image analysis to detect landmarks and related web entities. | 2023-03-29 | 2024-12-08 | 271 |
 | [lingolens](https://github.com/OSINT-mindset/lingolens) | HTML | - | Runs multilingual Google Lens searches and exports the results. | 2023-03-10 | 2026-05-29 | 85 |
 | [PhotOSINT](https://github.com/Haris87/photosint) | JavaScript | - | Extracts image metadata and adds reverse-image search actions to the browser. | 2019-09-15 | 2021-07-15 | 60 |
@@ -248,10 +254,11 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 
 <a id="general"></a>
 
-## 🧰 General <sup>20 projects</sup>
+## 🧰 General <sup>21 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [SearXNG](https://github.com/searxng/searxng) | Python | - | Aggregates results from multiple search services in a self-hosted metasearch engine. | 2021-04-12 | 2026-07-15 | 33,933 |
 | [SpiderFoot](https://github.com/smicallef/spiderfoot) | Python | - | Automates multi-source OSINT collection and attack-surface mapping. | 2012-04-28 | 2026-04-13 | 19,658 |
 | [OpenCTI](https://github.com/OpenCTI-Platform/opencti) | TypeScript | - | Organizes cyber threat intelligence in a graph-based analysis platform. | 2018-12-17 | 2026-07-14 | 9,682 |
 | [Recon-ng](https://github.com/lanmaster53/recon-ng) | Python | - | Organizes modular open-source intelligence collection in a command-line framework. | 2019-03-28 | 2024-11-01 | 5,774 |
@@ -286,7 +293,7 @@ The following sections separate tools by the social, community, messaging, video
 
 <a id="cross-platform"></a>
 
-## Cross-platform <sup>18 projects</sup>
+## Cross-platform <sup>19 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -308,16 +315,20 @@ The following sections separate tools by the social, community, messaging, video
 | [Linkook](https://github.com/JackJuly/linkook) | Python | Cross-platform | Discovers linked social accounts and email clues from a username. | 2025-01-30 | 2026-02-28 | 993 |
 | [Marple](https://github.com/soxoj/marple) | Python | Cross-platform via search engines | Finds profile links through search engines and extensible analysis plugins. | 2021-11-16 | 2026-07-14 | 312 |
 | [SocialPath](https://github.com/woj-ciech/SocialPath) | CSS | Facebook, X / Twitter, Stack Overflow, Instagram, Reddit, Steam, Pinterest, Tumblr, Pastebin, GitHub | Correlates usernames and profile links across supported social platforms. | 2020-09-05 | 2020-09-05 | 169 |
+| [Social OSINT](https://github.com/krishpranav/socialosint) | Rust | Instagram, LinkedIn, X / Twitter | Collects exposed email addresses from supported social platforms and checks related leak data. | 2021-07-02 | 2026-02-10 | 93 |
 
 <a id="x-and-twitter"></a>
 
-## X and Twitter <sup>4 projects</sup>
+## X and Twitter <sup>7 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [Twint](https://github.com/twintproject/twint) | Python (archived) | X / Twitter | Collects public Twitter posts, profiles, and account relationships without the official API. | 2017-06-10 | 2023-02-23 | 16,394 |
 | [Nitter](https://github.com/zedeus/nitter) | Nim | X / Twitter | Provides a privacy-oriented front end for viewing public X content. | 2019-06-20 | 2026-06-26 | 13,258 |
+| [twitter-scraper](https://github.com/bisguzar/twitter-scraper) | Python (archived) | X / Twitter | Collects public Twitter data through the frontend API without official API authentication. | 2018-02-22 | 2023-10-30 | 4,013 |
 | [tinfoleak](https://github.com/vaguileradiaz/tinfoleak) | Python | X / Twitter | Analyzes public Twitter account activity and associated metadata. | 2018-01-27 | 2019-02-06 | 1,978 |
 | [X Tweet Fetcher](https://github.com/ythx-101/x-tweet-fetcher) | Python | X / Twitter | Retrieves public X posts, replies, timelines, and articles without login. | 2026-02-14 | 2026-07-05 | 901 |
+| [stweet](https://github.com/markowanga/stweet) | Python | X / Twitter | Provides an unofficial Python library for collecting Twitter posts and user records. | 2020-11-16 | 2023-07-25 | 623 |
 | [xint](https://github.com/0xNyk/xint) | CLI + skill + MCP | X / Twitter; Multi-model | Searches, monitors, and exports public X data for agent-assisted investigations. | 2026-02-14 | 2026-07-04 | 215 |
 
 <a id="facebook"></a>
@@ -401,11 +412,12 @@ The following sections separate tools by the social, community, messaging, video
 
 <a id="tiktok"></a>
 
-## TikTok <sup>1 project</sup>
+## TikTok <sup>2 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
 | [TikTok Hashtag Analysis](https://github.com/bellingcat/tiktok-hashtag-analysis) | Python | TikTok | Collects and analyzes TikTok posts associated with selected hashtags. | 2021-08-11 | 2024-06-20 | 367 |
+| [TikTok-OSINT](https://github.com/T1erno/TikTok-OSINT) | Python | TikTok | Collects public TikTok profile metadata and profile images from a username. | 2021-07-23 | 2022-11-02 | 3 |
 
 <a id="youtube"></a>
 
@@ -447,10 +459,12 @@ The following sections separate tools by the social, community, messaging, video
 
 <a id="github"></a>
 
-## GitHub <sup>14 projects</sup>
+## GitHub <sup>16 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [Gitleaks](https://github.com/gitleaks/gitleaks) | Go | Git, GitHub | Scans Git repositories and other inputs for hardcoded secrets and credentials. | 2018-01-27 | 2026-07-15 | 28,153 |
+| [TruffleHog](https://github.com/trufflesecurity/trufflehog) | Go | GitHub, GitLab, Git and other sources | Finds, verifies, and analyzes exposed credentials across supported code and storage sources. | 2016-12-31 | 2026-07-15 | 27,053 |
 | [shhgit](https://github.com/eth0izzle/shhgit) | JavaScript | GitHub, GitLab, Bitbucket | Monitors public code platforms for newly exposed secrets. | 2019-09-06 | 2023-08-30 | 3,971 |
 | [github-dorks](https://github.com/techgaun/github-dorks) | Python | GitHub | Runs GitHub search queries intended to locate exposed sensitive data. | 2015-10-11 | 2021-01-18 | 3,241 |
 | [GitDorker](https://github.com/obheda12/GitDorker) | Python | GitHub | Automates GitHub dork searches for exposed secrets. | 2020-07-13 | 2020-07-13 | 2,567 |
