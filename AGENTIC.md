@@ -33,7 +33,7 @@ This file tracks public repositories that extend AI agents with investigative wo
 - [Web research and source discovery](#web-research-and-source-discovery) <sup>24 projects</sup>
 - [Academic and structured research](#academic-and-structured-research) <sup>6 projects</sup>
 - [Metadata conventions](#metadata-conventions)
-- [Complete CSV database](osint-repositories.csv) <sup>394 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 <a id="compatibility-labels"></a>
 

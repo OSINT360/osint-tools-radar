@@ -4,7 +4,7 @@
   <h1>Emerging OSINT Projects</h1>
   <p>An automatically updated watchlist of new and early-stage public repositories for efficiently tracking emerging tools, technical directions, and market activity across the OSINT ecosystem.</p>
   <p>
-    <a href="#projects"><img alt="Emerging projects: 71" src="https://img.shields.io/badge/emerging_projects-71-bf8700?style=flat-square"></a>
+    <a href="#projects"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging_projects-74-bf8700?style=flat-square"></a>
     <img alt="Target groups: 19" src="https://img.shields.io/badge/target_groups-19-8250df?style=flat-square">
     <img alt="Implementation verified" src="https://img.shields.io/badge/implementation-verified-1f883d?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-0969da?style=flat-square">
@@ -19,7 +19,7 @@
 - [Metadata conventions](#metadata-conventions)
 - [Main OSINT catalogue](README.md)
 - [Agentic AI OSINT](AGENTIC.md)
-- [Complete CSV database](osint-repositories.csv) <sup>394 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 <a id="selection-criteria"></a>
 
@@ -32,7 +32,7 @@ Projects listed here must have a public source repository, identifiable implemen
 
 <a id="projects"></a>
 
-## Projects <sup>71 projects</sup>
+## Projects <sup>74 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -48,6 +48,7 @@ Projects listed here must have a public source repository, identifiable implemen
 | [ScopeSentry](https://github.com/Autumn-27/ScopeSentry) | Go | - | Manages distributed asset discovery, monitoring, and exposure analysis. | 2024-02-27 | 2026-06-26 | 1,531 |
 | [ClatScope](https://github.com/Clats97/ClatScope) | Python | - | Combines domain, IP, phone, email, breach, and geolocation lookups. | 2025-01-08 | 2025-11-19 | 1,502 |
 | [Betterleaks](https://github.com/betterleaks/betterleaks) | Go | GitHub, GitLab, Git and other sources | Scans supported code and storage sources for secrets with configurable detection and validation. | 2026-02-03 | 2026-07-14 | 1,471 |
+| [unblink](https://github.com/zapdos-labs/unblink) | Go | RTSP and MJPEG cameras | Uses vision-language models to monitor camera feeds and search recorded frames with natural language. | 2025-11-05 | 2026-03-09 | 1,469 |
 | [Instagram Monitor](https://github.com/misiektoja/instagram_monitor) | Python | Instagram | Tracks public Instagram profile changes, activity, and captured content. | 2024-04-25 | 2026-07-06 | 1,111 |
 | [GeoIntel](https://github.com/atiilla/GeoIntel) | HTML | - | Uses assisted image analysis to estimate where a photograph was taken. | 2024-01-22 | 2026-03-09 | 1,105 |
 | [Linkook](https://github.com/JackJuly/linkook) | Python | Cross-platform | Discovers linked social accounts and email clues from a username. | 2025-01-30 | 2026-02-28 | 993 |
@@ -69,6 +70,7 @@ Projects listed here must have a public source repository, identifiable implemen
 | [OSINT Mapping Tool](https://github.com/anonymousRAID/OSINT-Mapping-Tool) | JavaScript | - | Organizes investigation data and geographic findings on an interactive map. | 2026-05-18 | 2026-07-05 | 491 |
 | [PANO](https://github.com/ALW1EZ/PANO) | Python | - | Combines link graphs, timelines, notes, and assisted investigation features. | 2024-12-30 | 2026-02-13 | 469 |
 | [ArkhamMirror](https://github.com/mantisfury/ArkhamMirror) | Python | - | Provides local document intelligence, retrieval, and relationship analysis for investigations. | 2025-11-25 | 2026-01-25 | 443 |
+| [VibeNVR](https://github.com/spupuz/VibeNVR) | JavaScript | IP and RTSP cameras | Provides privacy-focused local camera recording and monitoring without a cloud dependency. | 2026-01-15 | 2026-07-15 | 325 |
 | [FindME](https://github.com/0xSaikat/findme) | HTML | - | Searches social and online profiles associated with a username. | 2025-01-14 | 2026-07-03 | 311 |
 | [WhatsOSINT](https://github.com/HackUnderway/WhatsOSINT) | Python | WhatsApp | Retrieves public WhatsApp account details associated with a number. | 2024-11-19 | 2026-07-10 | 309 |
 | [Deanonymizer](https://github.com/ni5arga/deanonymizer) | TypeScript | - | Compares public posting history and behavioral timing patterns. | 2026-06-02 | 2026-06-15 | 309 |
@@ -87,6 +89,7 @@ Projects listed here must have a public source repository, identifiable implemen
 | [PRISM](https://github.com/NovaCode37/Prism-platform) | Python | - | Combines multi-target OSINT modules, OPSEC scoring, entity graphs, and assisted reporting. | 2026-03-30 | 2026-07-13 | 138 |
 | [Telespot](https://github.com/thumpersecure/Telespot) | Python | - | Searches phone-number variations across public engines and correlates identity clues. | 2025-12-28 | 2026-02-26 | 133 |
 | [IntelHub](https://github.com/tomsec8/IntelHub) | JavaScript | - | Adds local browser tools for metadata, archives, dorking, and OSINT lookups. | 2025-05-15 | 2026-07-09 | 120 |
+| [Project Eyes On](https://github.com/Y0oshi/Project-Eyes-On) | Python | Public camera directories and web search | Finds publicly accessible IP-camera streams through public directories and web-search queries. | 2026-01-10 | 2026-01-12 | 120 |
 | [TikSpyder](https://github.com/estebanpdl/tik-spyder) | Python | TikTok | Collects TikTok search, user, tag, and media data through SerpAPI and Apify. | 2024-07-16 | 2026-02-27 | 98 |
 | [OWASP Social OSINT Agent](https://github.com/bm-github/owasp-social-osint-agent) | Python | - | Collects public social activity and uses configurable language models to produce analytical reports. | 2025-10-07 | 2026-04-25 | 85 |
 | [IntellyWeave](https://github.com/vericle/intellyweave) | Python | - | Combines archive discovery, entity extraction, maps, graphs, and document analysis. | 2025-12-12 | 2026-01-05 | 69 |

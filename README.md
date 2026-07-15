@@ -4,12 +4,12 @@
   <h1>OSINT Tools Radar</h1>
   <p>An automatically updated catalogue for efficiently monitoring the open-source OSINT tools market across investigation targets, social platforms, and emerging technologies.</p>
   <p>
-    <a href="#table-of-contents"><img alt="Catalogued projects: 230" src="https://img.shields.io/badge/catalogued-230-0969da?style=flat-square"></a>
-    <a href="EMERGING.md"><img alt="Emerging projects: 71" src="https://img.shields.io/badge/emerging-71-bf8700?style=flat-square"></a>
+    <a href="#table-of-contents"><img alt="Catalogued projects: 256" src="https://img.shields.io/badge/catalogued-256-0969da?style=flat-square"></a>
+    <a href="EMERGING.md"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging-74-bf8700?style=flat-square"></a>
     <a href="#social-platforms"><img alt="Social platform entries: 104" src="https://img.shields.io/badge/social_platforms-104-8250df?style=flat-square"></a>
     <a href="AGENTIC.md"><img alt="Agentic integrations: 108" src="https://img.shields.io/badge/agentic_integrations-108-d1242f?style=flat-square"></a>
-    <a href="osint-repositories.csv"><img alt="CSV database: 394" src="https://img.shields.io/badge/CSV_database-394-1f883d?style=flat-square"></a>
-    <img alt="Catalogue entries: 409" src="https://img.shields.io/badge/catalogue_entries-409-8250df?style=flat-square">
+    <a href="osint-repositories.csv"><img alt="CSV database: 420" src="https://img.shields.io/badge/CSV_database-420-1f883d?style=flat-square"></a>
+    <img alt="Catalogue entries: 438" src="https://img.shields.io/badge/catalogue_entries-438-8250df?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
   <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
@@ -39,7 +39,7 @@ This repository is a compact index of OSINT tools grouped by their primary inves
   - [IP Address](#ip-address) <sup>11 projects</sup>
   - [URL](#url) <sup>24 projects</sup>
 - **Media and geography**
-  - [Image](#image) <sup>10 projects</sup>
+  - [Image](#image) <sup>36 projects</sup>
   - [Location](#location) <sup>5 projects</sup>
 - **Organizations and assets**
   - [Company](#company) <sup>4 projects</sup>
@@ -64,9 +64,9 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 - [Catalogue automation](#catalogue-automation)
 - [Reviewed source collections](#reviewed-source-collections)
 - [Metadata conventions](#metadata-conventions)
-- [Emerging projects](EMERGING.md) <sup>71 projects</sup>
+- [Emerging projects](EMERGING.md) <sup>74 projects</sup>
 - [Agentic AI OSINT](AGENTIC.md) <sup>108 projects</sup>
-- [Complete CSV database](osint-repositories.csv) <sup>394 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 ---
 
@@ -201,18 +201,44 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 
 <a id="image"></a>
 
-## 🖼️ Image <sup>10 projects</sup>
+## 🖼️ Image <sup>36 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [face_recognition](https://github.com/ageitgey/face_recognition) | Python | Python and CLI | Recognizes and compares faces through a Python API and command-line interface. | 2017-03-03 | 2026-06-25 | 56,581 |
+| [Frigate](https://github.com/blakeblackshear/frigate) | TypeScript | IP and RTSP cameras | Records and analyzes local IP-camera streams with real-time object detection, tracking, and search. | 2019-01-26 | 2026-07-15 | 34,355 |
+| [InsightFace](https://github.com/deepinsight/insightface) | Python | Python, C++, and desktop GUI | Performs face detection, alignment, recognition, and embedding analysis across multiple runtimes. | 2017-09-01 | 2026-05-23 | 29,249 |
 | [DeepFace](https://github.com/serengil/deepface) | Python | - | Performs face verification, recognition, search, and facial attribute analysis. | 2020-02-08 | 2026-06-29 | 23,109 |
+| [CompreFace](https://github.com/exadel-inc/CompreFace) | Java | Self-hosted REST API | Provides self-hosted face detection, recognition, verification, and similarity search through a REST API. | 2020-07-06 | 2024-10-05 | 8,135 |
+| [ZoneMinder](https://github.com/ZoneMinder/zoneminder) | PHP | IP, USB, and analog cameras | Monitors, records, and reviews IP, USB, and analog camera feeds. | 2013-04-12 | 2026-07-14 | 5,882 |
+| [EagleEye](https://github.com/ThoughtfulDev/EagleEye) | Python | Instagram, Facebook, YouTube, and X/Twitter | Uses face recognition and reverse-image search to locate potentially related social profiles. | 2018-02-17 | 2024-04-25 | 5,144 |
 | [ExifTool](https://github.com/exiftool/exiftool) | Perl | - | Reads and writes metadata embedded in images and other file formats. | 2018-05-09 | 2026-05-27 | 4,871 |
+| [Torchreid](https://github.com/KaiyangZhou/deep-person-reid) | Python | Images and camera footage | Re-identifies people across images and camera views with pretrained models and training tools. | 2018-03-11 | 2026-01-09 | 4,867 |
+| [motionEye](https://github.com/motioneye-project/motioneye) | Python | IP and local cameras | Provides web-based multi-camera monitoring, motion detection, recording, and review. | 2015-08-30 | 2026-07-14 | 4,633 |
+| [FastReID](https://github.com/JDAI-CV/fast-reid) | Python | Images and camera footage | Provides models and inference tooling for person re-identification across camera imagery. | 2018-06-06 | 2024-07-30 | 3,966 |
 | [ImageHash](https://github.com/JohannesBuchner/imagehash) | Python | - | Calculates perceptual image hashes for similarity and duplicate-image comparison. | 2013-03-02 | 2025-04-17 | 3,852 |
+| [Search by Image](https://github.com/dessant/search-by-image) | JavaScript | Chrome, Edge, and Safari | Sends images to multiple reverse-image search engines from Chrome, Edge, and Safari. | 2017-06-17 | 2026-06-27 | 3,595 |
+| [Viseron](https://github.com/roflcoopter/viseron) | Python | CCTV and IP cameras | Analyzes local camera feeds with motion, object, face, and license-plate detection. | 2020-08-30 | 2026-07-15 | 3,281 |
+| [Human](https://github.com/vladmandic/human) | TypeScript | Browser and Node.js | Performs face detection, recognition, matching, and broader human analysis in browsers and Node.js. | 2020-10-11 | 2025-12-13 | 3,207 |
 | [image-match](https://github.com/rhsimplex/image-match) | Python | - | Performs scalable perceptual image matching against indexed images. | 2016-03-08 | 2022-12-06 | 2,976 |
+| [DeepCamera](https://github.com/SharpAI/DeepCamera) | JavaScript | CCTV and IP cameras | Analyzes camera feeds with local vision models, face recognition, re-identification, and configurable AI skills. | 2019-03-05 | 2026-06-18 | 2,908 |
 | [RetinaFace](https://github.com/serengil/retinaface) | Python | - | Detects, aligns, and extracts faces from images for downstream comparison workflows. | 2021-04-25 | 2026-06-01 | 2,011 |
+| [Photonix](https://github.com/photonixapp/photonix) | Python | - | Organizes and searches local photo collections using faces, objects, locations, and visual attributes. | 2017-03-07 | 2026-07-14 | 1,953 |
+| [unblink](https://github.com/zapdos-labs/unblink) | Go | RTSP and MJPEG cameras | Uses vision-language models to monitor camera feeds and search recorded frames with natural language. | 2025-11-05 | 2026-03-09 | 1,469 |
+| [HomeGallery](https://github.com/xemle/home-gallery) | JavaScript | Self-hosted photo and video collections | Indexes local photos and videos for reverse-image lookup, face search, and semantic discovery. | 2020-12-22 | 2026-06-25 | 1,169 |
+| [FaceAPI](https://github.com/vladmandic/face-api) | TypeScript (archived) | Browser and Node.js | Provides browser and Node.js face detection, recognition, description, and attribute analysis. | 2020-08-18 | 2025-02-05 | 1,079 |
+| [Kerberos Agent](https://github.com/kerberos-io/agent) | Go | RTSP cameras | Runs local video monitoring, recording, motion analysis, and event capture for RTSP camera streams. | 2020-08-12 | 2026-07-15 | 1,073 |
+| [camera.ui](https://github.com/cameraui/camera.ui) | TypeScript | CCTV and IP cameras | Records, monitors, and searches local camera feeds with on-device detection workflows. | 2021-10-27 | 2026-07-15 | 1,063 |
+| [clearcam](https://github.com/roryclear/clearcam) | Python | RTSP and HLS cameras | Adds object detection, tracking, notifications, summaries, and search to security-camera feeds. | 2025-01-04 | 2026-07-15 | 947 |
 | [ExifLooter](https://github.com/aydinnyunus/exiflooter) | Go | - | Finds geolocation metadata in local and remote images and maps the results. | 2022-07-30 | 2023-12-28 | 494 |
 | [gallery-dl](https://codeberg.org/mikf/gallery-dl) | Python | Cross-platform image sites | Downloads image galleries and media collections from supported websites. | 2026-03-24 | 2026-07-15 | 380 |
+| [SentryShot](https://github.com/SentryShot/sentryshot) | Rust | IP and RTSP cameras | Records camera streams and applies local object detection through a web video-management interface. | 2023-10-29 | 2026-04-27 | 356 |
+| [VibeNVR](https://github.com/spupuz/VibeNVR) | JavaScript | IP and RTSP cameras | Provides privacy-focused local camera recording and monitoring without a cloud dependency. | 2026-01-15 | 2026-07-15 | 325 |
 | [GVision](https://github.com/GONZOsint/gvision) | Python | - | Uses image analysis to detect landmarks and related web entities. | 2023-03-29 | 2024-12-08 | 271 |
+| [clip-image-search](https://github.com/kingyiusuen/clip-image-search) | Python | Local image collections | Searches local image collections by reference image or text using CLIP embeddings. | 2021-08-24 | 2022-01-15 | 268 |
+| [goris](https://github.com/tanaikech/goris) | Go | Google Images | Runs Google reverse-image searches from the command line. | 2017-04-26 | 2026-07-07 | 124 |
+| [Project Eyes On](https://github.com/Y0oshi/Project-Eyes-On) | Python | Public camera directories and web search | Finds publicly accessible IP-camera streams through public directories and web-search queries. | 2026-01-10 | 2026-01-12 | 120 |
+| [EfficientIR](https://github.com/Sg4Dylan/EfficientIR) | Python | Local image collections | Finds similar and duplicate images in local collections using visual embeddings. | 2020-03-30 | 2025-06-25 | 112 |
 | [lingolens](https://github.com/OSINT-mindset/lingolens) | HTML | - | Runs multilingual Google Lens searches and exports the results. | 2023-03-10 | 2026-05-29 | 85 |
 | [PhotOSINT](https://github.com/Haris87/photosint) | JavaScript | - | Extracts image metadata and adds reverse-image search actions to the browser. | 2019-09-15 | 2021-07-15 | 60 |
 
