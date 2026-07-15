@@ -2,14 +2,14 @@
 
 <div align="center">
   <h1>Emerging OSINT Projects</h1>
-  <p>An automatically updated watchlist of new and early-stage public repositories for efficiently tracking emerging tools, technical directions, and market activity across the OSINT ecosystem.</p>
+  <p>An automatically updated watchlist of early-stage open-source OSINT tools and the public source-code repositories that contain their implementations.</p>
   <p>
     <a href="#projects"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging_projects-74-bf8700?style=flat-square"></a>
     <img alt="Target groups: 19" src="https://img.shields.io/badge/target_groups-19-8250df?style=flat-square">
     <img alt="Implementation verified" src="https://img.shields.io/badge/implementation-verified-1f883d?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-0969da?style=flat-square">
   </p>
-  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
+  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Open-source Repository Database</a></strong></p>
 </div>
 
 ## Contents
@@ -19,13 +19,13 @@
 - [Metadata conventions](#metadata-conventions)
 - [Main OSINT catalogue](README.md)
 - [Agentic AI OSINT](AGENTIC.md)
-- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 <a id="selection-criteria"></a>
 
 ## Selection criteria
 
-Projects listed here must have a public source repository, identifiable implementation, and a practical OSINT or investigative use case. Early development, limited adoption, and low star counts do not automatically exclude a project.
+Projects listed here must have a public source-code repository, an identifiable implementation, and a practical OSINT or investigative use case. The watchlist is intended for open-source software; license status is verified separately from source visibility, and missing or unclear license metadata requires manual review. Early development, limited adoption, and low star counts do not automatically exclude a project.
 
 > [!NOTE]
 > Inclusion indicates potential usefulness, not a security audit, endorsement, or guarantee of long-term maintenance.
@@ -117,16 +117,17 @@ Projects listed here must have a public source repository, identifiable implemen
 
 ## Metadata conventions
 
-- **Project** links to the canonical public source repository.
+- **Project** links to the canonical public source-code repository containing the implementation.
 - **Type** is the repository's primary implementation language for standalone tools, or its integration type for skills, plugins, and MCP projects.
 - **Compatibility** names the investigated platform or cross-platform scope for social tools, and a documented AI client or standard for agentic integrations; `-` means the field does not apply.
 - **Description** summarizes the project's primary capability in neutral language.
 - **Created** is the public repository creation date.
 - **Last Update** is the latest recorded repository push date.
 - **Stars ⭐** is a point-in-time snapshot captured on **2026-07-15**.
+- **License** in the repository database records the open-source license declared by the project. Blank, missing, or `NOASSERTION` values require manual verification.
 - Projects promoted into the main catalogue should be removed from this file to prevent duplication.
 
 > [!TIP]
-> For established and platform-specific tools, return to [OSINT Tools Radar](README.md). For agent integrations, see [Agentic AI OSINT](AGENTIC.md). For one searchable dataset, use [osint-repositories.csv](osint-repositories.csv).
+> For established and platform-specific tools, return to [OSINT Tools Radar](README.md). For agent integrations, see [Agentic AI OSINT](AGENTIC.md). For one searchable dataset, use the [open-source repository database](osint-repositories.csv).
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

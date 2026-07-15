@@ -2,7 +2,7 @@
 
 <div align="center">
   <h1>Agentic AI OSINT</h1>
-  <p>An automatically updated radar of open-source skills, plugins, MCP servers, and AI agent integrations for efficiently monitoring the agentic OSINT, research, reconnaissance, and threat-intelligence market.</p>
+  <p>A catalogue of open-source skills, plugins, MCP servers, and AI-agent integrations, linked to the public source-code repositories that contain their implementations.</p>
   <p>
     <a href="#osint-investigation-and-intelligence"><img alt="OSINT integrations: 48" src="https://img.shields.io/badge/OSINT_integrations-48-0969da?style=flat-square"></a>
     <a href="#reconnaissance-and-threat-intelligence"><img alt="Recon and CTI: 30" src="https://img.shields.io/badge/recon_and_CTI-30-d1242f?style=flat-square"></a>
@@ -10,15 +10,15 @@
     <img alt="Total projects: 108" src="https://img.shields.io/badge/total_projects-108-bf8700?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
+  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Open-source Repository Database</a></strong></p>
 </div>
 
 ## About this catalogue
 
-This file tracks public repositories that extend AI agents with investigative workflows or data access. Automated metadata refreshes and review-gated discovery expose new integrations and changing adoption signals without publishing unverified candidates. It covers native agent skills, plugins, MCP servers, research systems, and mixed integrations with practical OSINT, recon, CTI, source discovery, or evidence-analysis capabilities.
+This file indexes public source-code repositories containing open-source integrations that extend AI agents with investigative workflows or data access. Automated metadata refreshes and review-gated discovery expose new integrations and changing adoption signals without publishing unverified candidates. It covers native agent skills, plugins, MCP servers, research systems, and mixed integrations with practical OSINT, reconnaissance, CTI, source-discovery, or evidence-analysis capabilities.
 
 > [!IMPORTANT]
-> Only repositories with public source code and identifiable implementation are included. Prompt lists, link-only collections, closed services, and repository stubs are excluded.
+> Only implementation-bearing repositories with public source code are included. Prompt lists, link-only collections, closed services, commercial integrations without public code, and repository stubs are excluded. License status is verified separately from source visibility and recorded in the repository database when confirmed.
 
 > [!NOTE]
 > This is a young and fast-moving ecosystem. Low or zero star counts do not disqualify a project when its repository already contains a meaningful implementation. Metadata and compatibility claims were last verified on **2026-07-15**.
@@ -33,7 +33,7 @@ This file tracks public repositories that extend AI agents with investigative wo
 - [Web research and source discovery](#web-research-and-source-discovery) <sup>24 projects</sup>
 - [Academic and structured research](#academic-and-structured-research) <sup>6 projects</sup>
 - [Metadata conventions](#metadata-conventions)
-- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 <a id="compatibility-labels"></a>
 
@@ -192,18 +192,19 @@ This file tracks public repositories that extend AI agents with investigative wo
 
 ## Metadata conventions
 
-- **Project** links to the canonical public source repository.
+- **Project** links to the canonical public source-code repository containing the implementation.
 - **Type** describes the repository's primary integration surface, not every component it contains.
 - **Compatibility** names platforms and standards explicitly documented by the repository; `-` means it does not apply.
 - **Description** summarizes the project's primary capability in neutral language.
 - **Created** is the public repository creation date.
 - **Last Update** is the latest recorded repository push date.
 - **Stars ⭐** is a point-in-time snapshot captured on **2026-07-15**.
+- **License** in the repository database records the open-source license declared by the project. Blank, missing, or `NOASSERTION` values require manual verification.
 - Star counts are exact at verification time and may change afterward.
 - Archived repositories are identified in the **Type** column.
 - Inclusion indicates practical relevance, not a security audit, endorsement, or guarantee of maintenance.
 
 > [!TIP]
-> For standalone OSINT software, use [OSINT Tools Radar](README.md). For new standalone tools, see [emerging projects](EMERGING.md). For one searchable dataset, use [osint-repositories.csv](osint-repositories.csv).
+> For standalone OSINT software, use [OSINT Tools Radar](README.md). For new standalone tools, see [emerging projects](EMERGING.md). For one searchable dataset, use the [open-source repository database](osint-repositories.csv).
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

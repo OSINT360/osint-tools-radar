@@ -120,11 +120,11 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     agentic_count = sum(len(rows_for_category(rows, category)) for _, category in AGENTIC_SECTIONS)
     total_entries = readme_count + emerging_count + agentic_count
 
-    text = replace_number_badge(text, "Catalogued projects", "catalogued", readme_count)
+    text = replace_number_badge(text, "Open-source tools", "open--source_tools", readme_count)
     text = replace_number_badge(text, "Emerging projects", "emerging", emerging_count)
     text = replace_number_badge(text, "Social platform entries", "social_platforms", social_count)
     text = replace_number_badge(text, "Agentic integrations", "agentic_integrations", agentic_count)
-    text = replace_number_badge(text, "CSV database", "CSV_database", len(rows))
+    text = replace_number_badge(text, "Source repositories", "source_repositories", len(rows))
     text = replace_number_badge(text, "Catalogue entries", "catalogue_entries", total_entries)
     text = re.sub(
         r"(\[Emerging projects\]\(EMERGING\.md\) <sup>)\d+\s+projects?(</sup>)",
@@ -137,7 +137,7 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
         text,
     )
     text = replace_discord_empty_state(text, counts["Discord"])
-    text = re.sub(r"(Complete CSV database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
+    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_verified_date(text, date)
 
 
@@ -145,7 +145,7 @@ def render_emerging(text: str, rows: list[dict[str, str]], date: str) -> str:
     selected = rows_for_category(rows, "Emerging")
     text = replace_section_table(text, "Projects", [format_markdown_row(row) for row in selected])
     text = replace_number_badge(text, "Emerging projects", "emerging_projects", len(selected))
-    text = re.sub(r"(Complete CSV database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
+    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_verified_date(text, date)
 
 
@@ -163,7 +163,7 @@ def render_agentic(text: str, rows: list[dict[str, str]], date: str) -> str:
     text = replace_number_badge(text, "Recon and CTI", "recon_and_CTI", counts["Reconnaissance and threat intelligence"])
     text = replace_number_badge(text, "Research integrations", "research_integrations", research_count)
     text = replace_number_badge(text, "Total projects", "total_projects", total)
-    text = re.sub(r"(Complete CSV database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
+    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_verified_date(text, date)
 
 

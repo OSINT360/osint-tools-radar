@@ -2,25 +2,28 @@
 
 <div align="center">
   <h1>OSINT Tools Radar</h1>
-  <p>An automatically updated catalogue for efficiently monitoring the open-source OSINT tools market across investigation targets, social platforms, and emerging technologies.</p>
+  <p>An automatically updated catalogue of open-source OSINT tools and the public source-code repositories that maintain them, organized by investigation target, platform, and emerging capability.</p>
   <p>
-    <a href="#table-of-contents"><img alt="Catalogued projects: 256" src="https://img.shields.io/badge/catalogued-256-0969da?style=flat-square"></a>
+    <a href="#table-of-contents"><img alt="Open-source tools: 256" src="https://img.shields.io/badge/open--source_tools-256-0969da?style=flat-square"></a>
     <a href="EMERGING.md"><img alt="Emerging projects: 74" src="https://img.shields.io/badge/emerging-74-bf8700?style=flat-square"></a>
     <a href="#social-platforms"><img alt="Social platform entries: 104" src="https://img.shields.io/badge/social_platforms-104-8250df?style=flat-square"></a>
     <a href="AGENTIC.md"><img alt="Agentic integrations: 108" src="https://img.shields.io/badge/agentic_integrations-108-d1242f?style=flat-square"></a>
-    <a href="osint-repositories.csv"><img alt="CSV database: 420" src="https://img.shields.io/badge/CSV_database-420-1f883d?style=flat-square"></a>
+    <a href="osint-repositories.csv"><img alt="Source repositories: 420" src="https://img.shields.io/badge/source_repositories-420-1f883d?style=flat-square"></a>
     <img alt="Catalogue entries: 438" src="https://img.shields.io/badge/catalogue_entries-438-8250df?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
+  <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Open-source Repository Database</a></strong></p>
 </div>
 
 ## About this catalogue
 
-This repository is a compact index of OSINT tools grouped by their primary investigation target or social platform. Automated metadata refreshes and review-gated discovery make it easier to monitor market activity, maintenance changes, adoption signals, and newly released open-source projects. Project names link directly to their source repositories.
+OSINT Tools Radar is a repository-first catalogue of open-source OSINT software. Every published entry represents a public source-code repository containing an identifiable tool or integration with a practical investigative use case. Project names link directly to the repositories that contain their implementations.
 
 > [!IMPORTANT]
-> Only projects with a publicly accessible source code repository are included. Closed-source services and link-only resource lists are excluded.
+> Only implementation-bearing repositories with publicly accessible source code are included. Closed-source services, commercial tools without public code, link collections, prompt-only lists, datasets, and repository stubs are excluded.
+
+> [!NOTE]
+> Public source-code access and open-source licensing are separate checks. License metadata is recorded in the repository database when verified; blank, missing, or `NOASSERTION` values require manual review and do not by themselves prove open-source status.
 
 > [!NOTE]
 > Repository metadata was last verified on **2026-07-15**. Star counts are a point-in-time snapshot and may change after verification.
@@ -66,7 +69,7 @@ This repository is a compact index of OSINT tools grouped by their primary inves
 - [Metadata conventions](#metadata-conventions)
 - [Emerging projects](EMERGING.md) <sup>74 projects</sup>
 - [Agentic AI OSINT](AGENTIC.md) <sup>108 projects</sup>
-- [Complete CSV database](osint-repositories.csv) <sup>420 unique repositories</sup>
+- [Complete repository database](osint-repositories.csv) <sup>420 unique repositories</sup>
 
 ---
 
@@ -525,7 +528,7 @@ The following sections separate tools by the social, community, messaging, video
 
 ## Catalogue automation
 
-The catalogue uses a review-gated monitor to refresh exact repository metadata, preserve historical snapshots, discover candidates across GitHub and other public sources, and regenerate every published table from one canonical CSV database.
+The catalogue uses a review-gated monitor to refresh exact repository metadata, preserve historical snapshots, discover candidates across GitHub and other public sources, and regenerate every published table from one canonical repository database.
 
 > [!TIP]
 > Maintainer documentation and automation internals are kept in the [hidden radar workspace](.radar/README.md).
@@ -551,16 +554,17 @@ All tracked text and configuration files in these source repositories were scann
 
 ## Metadata conventions
 
-- **Project** links to the canonical public source repository.
+- **Project** links to the canonical public source-code repository containing the implementation.
 - **Type** is the repository's primary implementation language for standalone tools, or its integration type for skills, plugins, and MCP projects.
 - **Compatibility** names the investigated platform for platform-specific tools, summarizes the scope for cross-platform tools, and names a documented AI client or standard for agentic integrations. When both apply, values are separated with a semicolon; `-` means the field does not apply.
 - **Description** summarizes the project's primary capability in neutral language.
 - **Created** is the public repository creation date.
 - **Last Update** is the date of the repository's latest recorded push in `YYYY-MM-DD` format.
 - **Stars ⭐** is the repository star count captured during the latest metadata verification.
+- **License** in the repository database records the open-source license declared by the project. Blank, missing, or `NOASSERTION` values require manual verification.
 - Each project appears only once, under its primary investigation target or platform.
 
 > [!TIP]
-> New standalone tools are maintained in [Emerging OSINT Projects](EMERGING.md). Agent skills, plugins, and MCP servers are listed in [Agentic AI OSINT](AGENTIC.md). The deduplicated [CSV database](osint-repositories.csv) combines all catalogue views.
+> New standalone tools are maintained in [Emerging OSINT Projects](EMERGING.md). Agent skills, plugins, and MCP servers are listed in [Agentic AI OSINT](AGENTIC.md). The deduplicated [open-source repository database](osint-repositories.csv) combines all catalogue views.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

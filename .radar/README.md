@@ -2,19 +2,19 @@
 
 <div align="center">
   <h1>OSINT Tools Radar Monitoring</h1>
-  <p>Automation and review guide for an automatically updated database that efficiently monitors new projects, maintenance changes, adoption signals, and broader movement across the open-source OSINT tools market.</p>
+  <p>Automation and review guide for maintaining a verified catalogue of open-source OSINT tools and the public source-code repositories that contain their implementations.</p>
   <p>
     <img alt="Publication policy: review gated" src="https://img.shields.io/badge/publication-review_gated-bf8700?style=flat-square">
     <img alt="Metadata refresh: weekly" src="https://img.shields.io/badge/metadata-weekly-0969da?style=flat-square">
     <img alt="Candidate discovery: daily" src="https://img.shields.io/badge/discovery-daily-8250df?style=flat-square">
     <img alt="Third-party code execution: disabled" src="https://img.shields.io/badge/third--party_code-not_executed-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <a href="../AGENTIC.md">Agentic AI OSINT</a> · <a href="../osint-repositories.csv">Repository Database</a> · <a href="README.md">Monitoring</a></strong></p>
+  <p><strong><a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <a href="../AGENTIC.md">Agentic AI OSINT</a> · <a href="../osint-repositories.csv">Open-source Repository Database</a> · <a href="README.md">Monitoring</a></strong></p>
 </div>
 
 ## Operating model
 
-`../osint-repositories.csv` is the canonical, deduplicated catalogue. The Markdown tables are generated views of accepted records. Candidate discovery is intentionally separate from publication.
+`../osint-repositories.csv` is the canonical, deduplicated repository database. The Markdown tables are generated views of accepted open-source tool and integration records. Candidate discovery is intentionally separate from publication.
 
 ```text
 .radar/data/sources.csv -> discover_candidates.py -> .radar/data/candidates.csv -> human review
@@ -30,7 +30,7 @@ The monitor never clones, imports, installs, or executes code from catalogued re
 
 | File | Purpose |
 |---|---|
-| `../osint-repositories.csv` | Canonical accepted records and current repository metadata. |
+| `../osint-repositories.csv` | Canonical accepted open-source tool records and current repository metadata. |
 | `data/candidates.csv` | Automatically discovered repositories awaiting an explicit decision. |
 | `data/sources.csv` | Enabled discovery queries, providers, windows, and suggested classifications. |
 | `data/snapshots.csv` | Point-in-time metadata used for trend and change reporting. |
@@ -85,6 +85,7 @@ Reports are operational artifacts and are not committed by the scheduled workflo
 Automated discovery provides suggestions, not final classifications. Before accepting a repository, verify that it:
 
 - contains meaningful, publicly accessible source code;
+- declares an open-source software license, or has its license status explicitly flagged for manual verification;
 - has a practical OSINT, SOCMINT, GEOINT, recon, CTI, research, or evidence-analysis use case;
 - is not merely a link collection, product landing page, prompt stub, or duplicate;
 - has a neutral description supported by its implementation and documentation;
@@ -138,6 +139,7 @@ Scheduled workflows use the repository-provided `GITHUB_TOKEN`. The repository m
 - `Last Update` records the latest repository push date reported by the hosting platform.
 - `Stars` records an exact point-in-time value, never an approximation.
 - `Verified` records the last successful metadata check.
+- `License` records the declared open-source license; blank, missing, or `NOASSERTION` values require manual review and do not prove open-source status.
 - Renamed or transferred GitHub repositories are replaced with the canonical API URL.
 - Archived repositories remain visible and are marked as archived until a review decides whether historical value justifies retention.
 - A confirmed `404` marks a repository as unavailable. Transient network and API failures do not change repository status.
