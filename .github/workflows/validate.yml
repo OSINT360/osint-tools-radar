@@ -1,0 +1,26 @@
+name: Validate OSINT Tools Radar
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check scripts and catalogue
+        run: |
+          python -m py_compile .radar/scripts/*.py
+          python .radar/scripts/render_catalog.py --check
+          python .radar/scripts/validate_catalog.py
