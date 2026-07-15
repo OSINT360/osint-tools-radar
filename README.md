@@ -4,12 +4,12 @@
   <h1>OSINT Tools Radar</h1>
   <p>An automatically updated catalogue for efficiently monitoring the open-source OSINT tools market across investigation targets, social platforms, and emerging technologies.</p>
   <p>
-    <a href="#table-of-contents"><img alt="Catalogued projects: 224" src="https://img.shields.io/badge/catalogued-224-0969da?style=flat-square"></a>
-    <a href="EMERGING.md"><img alt="Emerging projects: 70" src="https://img.shields.io/badge/emerging-70-bf8700?style=flat-square"></a>
-    <a href="#social-platforms"><img alt="Social platform entries: 98" src="https://img.shields.io/badge/social_platforms-98-8250df?style=flat-square"></a>
+    <a href="#table-of-contents"><img alt="Catalogued projects: 230" src="https://img.shields.io/badge/catalogued-230-0969da?style=flat-square"></a>
+    <a href="EMERGING.md"><img alt="Emerging projects: 71" src="https://img.shields.io/badge/emerging-71-bf8700?style=flat-square"></a>
+    <a href="#social-platforms"><img alt="Social platform entries: 104" src="https://img.shields.io/badge/social_platforms-104-8250df?style=flat-square"></a>
     <a href="AGENTIC.md"><img alt="Agentic integrations: 108" src="https://img.shields.io/badge/agentic_integrations-108-d1242f?style=flat-square"></a>
-    <a href="osint-repositories.csv"><img alt="CSV database: 388" src="https://img.shields.io/badge/CSV_database-388-1f883d?style=flat-square"></a>
-    <img alt="Catalogue entries: 402" src="https://img.shields.io/badge/catalogue_entries-402-8250df?style=flat-square">
+    <a href="osint-repositories.csv"><img alt="CSV database: 394" src="https://img.shields.io/badge/CSV_database-394-1f883d?style=flat-square"></a>
+    <img alt="Catalogue entries: 409" src="https://img.shields.io/badge/catalogue_entries-409-8250df?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-1f883d?style=flat-square">
   </p>
   <p><strong><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database</a></strong></p>
@@ -60,13 +60,13 @@ This repository is a compact index of OSINT tools grouped by their primary inves
   - [WhatsApp](#whatsapp) <sup>2 projects</sup>
   - [Steam](#steam) <sup>3 projects</sup>
   - [GitHub](#github) <sup>16 projects</sup>
-  - [Discord](#discord) <sup>0 projects</sup>
+  - [Discord](#discord) <sup>6 projects</sup>
 - [Catalogue automation](#catalogue-automation)
 - [Reviewed source collections](#reviewed-source-collections)
 - [Metadata conventions](#metadata-conventions)
-- [Emerging projects](EMERGING.md) <sup>70 projects</sup>
+- [Emerging projects](EMERGING.md) <sup>71 projects</sup>
 - [Agentic AI OSINT](AGENTIC.md) <sup>108 projects</sup>
-- [Complete CSV database](osint-repositories.csv) <sup>388 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>394 unique repositories</sup>
 
 ---
 
@@ -482,12 +482,16 @@ The following sections separate tools by the social, community, messaging, video
 
 <a id="discord"></a>
 
-## Discord <sup>0 projects</sup>
-
-No implementation-bearing public repository from the reviewed sources passed the inclusion criteria.
+## Discord <sup>6 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
+| [DiscordChatExporter](https://github.com/Tyrrrz/DiscordChatExporter) | C# | Discord | Exports accessible Discord message history and rich media to local files. | 2017-07-12 | 2026-07-14 | 11,583 |
+| [Discord History Tracker](https://github.com/chylex/Discord-History-Tracker) | C# | Discord | Saves accessible Discord chat history for offline preservation and review. | 2016-10-22 | 2026-01-29 | 579 |
+| [DiscordLookup](https://github.com/discordlookup/discordlookup) | PHP (archived) | Discord | Provides user, guild, application, invite, and snowflake lookup functions. | 2021-09-28 | 2025-10-21 | 254 |
+| [discard2](https://github.com/Sanqui/discard2) | TypeScript (archived) | Discord | Creates high-fidelity local archives of accessible Discord content. | 2022-03-15 | 2025-07-21 | 39 |
+| [discord-urls-extractor](https://github.com/TheTechRobo/discord-urls-extractor) | Rust | Discord | Extracts URLs and media references from supported Discord archive formats. | 2021-11-21 | 2024-12-19 | 21 |
+| [Discord Inspector](https://github.com/Euronymou5/Discord-Inspector) | Python | Discord | Retrieves public user, server, and application metadata from Discord identifiers. | 2024-12-03 | 2024-12-05 | 6 |
 
 ---
 

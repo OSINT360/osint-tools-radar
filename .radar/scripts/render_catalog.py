@@ -97,6 +97,15 @@ def replace_verified_date(text: str, date: str) -> str:
     return text
 
 
+def replace_discord_empty_state(text: str, count: int) -> str:
+    note = "No implementation-bearing public repository from the reviewed sources passed the inclusion criteria."
+    pattern = re.compile(
+        rf"(## Discord <sup>\d+\s+projects?</sup>\n\n)(?:{re.escape(note)}\n\n)?(?={re.escape(TABLE_HEADER)})"
+    )
+    replacement = rf"\g<1>{note}\n\n" if count == 0 else r"\g<1>"
+    return pattern.sub(replacement, text)
+
+
 def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     counts: dict[str, int] = {}
     for label, category in README_SECTIONS:
@@ -127,6 +136,7 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
         rf"\g<1>{agentic_count} {count_label(agentic_count)}\2",
         text,
     )
+    text = replace_discord_empty_state(text, counts["Discord"])
     text = re.sub(r"(Complete CSV database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_verified_date(text, date)
 

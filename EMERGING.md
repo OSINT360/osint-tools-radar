@@ -4,7 +4,7 @@
   <h1>Emerging OSINT Projects</h1>
   <p>An automatically updated watchlist of new and early-stage public repositories for efficiently tracking emerging tools, technical directions, and market activity across the OSINT ecosystem.</p>
   <p>
-    <a href="#projects"><img alt="Emerging projects: 70" src="https://img.shields.io/badge/emerging_projects-70-bf8700?style=flat-square"></a>
+    <a href="#projects"><img alt="Emerging projects: 71" src="https://img.shields.io/badge/emerging_projects-71-bf8700?style=flat-square"></a>
     <img alt="Target groups: 19" src="https://img.shields.io/badge/target_groups-19-8250df?style=flat-square">
     <img alt="Implementation verified" src="https://img.shields.io/badge/implementation-verified-1f883d?style=flat-square">
     <img alt="Last verified: 2026-07-15" src="https://img.shields.io/badge/last_verified-2026--07--15-0969da?style=flat-square">
@@ -19,7 +19,7 @@
 - [Metadata conventions](#metadata-conventions)
 - [Main OSINT catalogue](README.md)
 - [Agentic AI OSINT](AGENTIC.md)
-- [Complete CSV database](osint-repositories.csv) <sup>388 unique repositories</sup>
+- [Complete CSV database](osint-repositories.csv) <sup>394 unique repositories</sup>
 
 <a id="selection-criteria"></a>
 
@@ -32,7 +32,7 @@ Projects listed here must have a public source repository, identifiable implemen
 
 <a id="projects"></a>
 
-## Projects <sup>70 projects</sup>
+## Projects <sup>71 projects</sup>
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
@@ -102,6 +102,7 @@ Projects listed here must have a public source repository, identifiable implemen
 | [Abster Intelligence](https://github.com/frangelbarrera/Abster-Intelligence) | TypeScript | - | Provides a local-first workspace for evidence, relationship graphs, timelines, OSINT lookups, and reports. | 2026-04-10 | 2026-07-01 | 13 |
 | [NEXUS](https://github.com/Kit4Some/NEXUsint) | Python | - | Combines live multi-INT feeds, knowledge graphs, maps, and assisted analysis in a desktop platform. | 2026-03-20 | 2026-04-17 | 10 |
 | [OSINT-NEXUS](https://github.com/Muhib-Mehdi/OSINT-NEXUS) | Python | - | Combines multi-target collection, entity correlation, graphs, and reporting in a desktop application. | 2025-12-30 | 2026-01-04 | 7 |
+| [Discord Inspector](https://github.com/Euronymou5/Discord-Inspector) | Python | Discord | Retrieves public user, server, and application metadata from Discord identifiers. | 2024-12-03 | 2024-12-05 | 6 |
 | [PolyShadow](https://github.com/Ha1o/PolyShadow) | Python | - | Monitors new Polymarket wallets for unusual high-value positions. | 2026-01-10 | 2026-02-23 | 2 |
 | [Wash Trade Scanner](https://github.com/Yog-Sotho/Wash-Trade-Scanner) | Python | - | Audits blockchain activity for wash trading and artificial volume patterns. | 2026-04-16 | 2026-07-10 | 2 |
 | [BitSleuth Analyzer](https://github.com/BitSleuthAI/Analyzer) | TypeScript | - | Analyzes Bitcoin wallets, transaction patterns, and mempool activity. | 2025-08-05 | 2026-07-07 | 1 |
