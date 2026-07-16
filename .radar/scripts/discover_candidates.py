@@ -97,8 +97,6 @@ def candidate_score(item: dict[str, Any]) -> int:
         score += 1
     if item.get("archived"):
         score -= 5
-    if item.get("fork"):
-        score -= 5
     return score
 
 
@@ -115,12 +113,15 @@ def github_items(client: HttpClient, source: dict[str, str], since: str, limit: 
     window = source["Window"]
     if window in {"created", "pushed"}:
         query += f" {window}:>={since}"
-    query += " archived:false fork:false"
+    query += " archived:false"
     params = urlencode({"q": query, "sort": "updated", "order": "desc", "per_page": limit})
     payload = client.get(f"https://api.github.com/search/repositories?{params}", github=True)
     results = []
     for item in payload.get("items", []):
         license_data = item.get("license") or {}
+        license_id = license_data.get("spdx_id") if isinstance(license_data, dict) else ""
+        if license_id == "NOASSERTION":
+            license_id = ""
         results.append(
             {
                 "name": item.get("name"),
@@ -131,7 +132,7 @@ def github_items(client: HttpClient, source: dict[str, str], since: str, limit: 
                 "updated": item.get("pushed_at"),
                 "stars": item.get("stargazers_count"),
                 "language": item.get("language"),
-                "license": license_data.get("spdx_id") if isinstance(license_data, dict) else "",
+                "license": license_id,
                 "archived": item.get("archived"),
                 "fork": item.get("fork"),
                 "topics": item.get("topics") or [],
@@ -320,6 +321,8 @@ def main() -> int:
             continue
         added = 0
         for item in items:
+            if item.get("archived"):
+                continue
             url = clean_text(item.get("url"))
             if not url or repository_key(url) in known:
                 continue

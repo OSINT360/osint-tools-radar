@@ -15,6 +15,7 @@ from catalog_common import (
     ALL_CATEGORIES,
     ALL_COLUMNS,
     DATA_ROOT,
+    MIN_LAST_UPDATE,
     RADAR_ROOT,
     README_SECTIONS,
     ROOT,
@@ -28,6 +29,7 @@ from catalog_common import (
     source_files_for_categories,
     split_values,
     stars_as_int,
+    verified_date,
 )
 
 
@@ -86,7 +88,7 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
 
     seen_urls: dict[str, int] = {}
     seen_ids: dict[str, int] = {}
-    allowed_status = {"active", "archived", "unavailable", "unknown"}
+    allowed_status = {"active", "unavailable", "unknown"}
     for line_number, row in enumerate(rows, 2):
         for field in ("Project", "Target", "Type", "Description", "Hosting"):
             validation.check(bool(row.get(field, "").strip()), f"osint-repositories.csv:{line_number}: missing {field}")
@@ -107,6 +109,10 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
         for field in ("Created", "Last Update", "Verified"):
             value = row.get(field, "")
             validation.check(bool(DATE_PATTERN.fullmatch(value)), f"osint-repositories.csv:{line_number}: invalid {field}: {value!r}")
+        validation.check(
+            row.get("Last Update", "") >= MIN_LAST_UPDATE,
+            f"osint-repositories.csv:{line_number}: repository is outside the lifecycle window",
+        )
         try:
             stars_as_int(row.get("Stars", ""))
         except ValueError:
@@ -124,10 +130,8 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
         validation.check(actual_sources == expected_sources, f"osint-repositories.csv:{line_number}: Source Files do not match Categories")
         validation.check(row.get("Repository Status", "") in allowed_status, f"osint-repositories.csv:{line_number}: invalid Repository Status")
         validation.check(row.get("Review Status", "") == "accepted", f"osint-repositories.csv:{line_number}: canonical records must be accepted")
-        validation.check(row.get("Archived", "") in {"true", "false"}, f"osint-repositories.csv:{line_number}: invalid Archived")
+        validation.check(row.get("Archived", "") == "false", f"osint-repositories.csv:{line_number}: archived repositories must be removed")
         validation.check(row.get("Fork", "") in {"", "true", "false"}, f"osint-repositories.csv:{line_number}: invalid Fork")
-        if row.get("Repository Status") == "archived":
-            validation.check(row.get("Archived") == "true", f"osint-repositories.csv:{line_number}: archived status disagrees with metadata")
 
     validation.check(len(rows) == len(seen_urls), "osint-repositories.csv: repository uniqueness check failed")
     return fields, rows
@@ -168,7 +172,76 @@ def validate_local_links(validation: Validation) -> None:
             validation.check(local_path.exists(), f"{path.name}: missing local link target: {target}")
 
 
-def validate_auxiliary_csv(validation: Validation) -> None:
+def validate_update_badges(
+    validation: Validation,
+    rows: list[dict[str, str]],
+) -> None:
+    date = verified_date(rows)
+    badge = (
+        f'<img alt="Last update: {date}" '
+        f'src="https://img.shields.io/badge/last_update-'
+        f'{date.replace("-", "--")}-1f883d?style=flat-square">'
+    )
+    markdown_files = sorted(
+        path
+        for path in ROOT.rglob("*.md")
+        if ".git" not in path.relative_to(ROOT).parts
+    )
+    for path in markdown_files:
+        text = path.read_text(encoding="utf-8")
+        validation.check(
+            text.count('alt="Last update:') == 1,
+            f"{path.relative_to(ROOT)}: expected exactly one Last update badge",
+        )
+        validation.check(
+            badge in text,
+            f"{path.relative_to(ROOT)}: missing or outdated Last update badge",
+        )
+
+
+def validate_navigation(validation: Validation) -> None:
+    expected = {
+        ROOT / "README.md": (
+            '<p><a href="README.md">OSINT Tools Radar</a> · '
+            '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+        ROOT / "EMERGING.md": (
+            '<p><a href="EMERGING.md">Emerging Projects</a> · '
+            '<a href="README.md">OSINT Tools Radar</a> · '
+            '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+        ROOT / "AGENTIC.md": (
+            '<p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="README.md">OSINT Tools Radar</a> · '
+            '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+        RADAR_ROOT / "README.md": (
+            '<p><a href="README.md">Monitoring</a> · '
+            '<a href="../README.md">OSINT Tools Radar</a> · '
+            '<a href="../EMERGING.md">Emerging Projects</a> · '
+            '<strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="../osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+    }
+    for path, navigation in expected.items():
+        validation.check(
+            navigation in path.read_text(encoding="utf-8"),
+            f"{path.relative_to(ROOT)}: invalid navigation order or labels",
+        )
+
+
+def validate_auxiliary_csv(
+    validation: Validation,
+    catalogue: list[dict[str, str]],
+) -> None:
+    canonical = {repository_key(row["Repository"]): row for row in catalogue}
+    canonical_ids = {
+        row.get("Repository ID", "") for row in catalogue if row.get("Repository ID", "")
+    }
     schemas = {
         DATA_ROOT / "candidates.csv": [
             "Project", "Repository", "Hosting", "Discovered", "Discovery Source", "Query",
@@ -200,7 +273,32 @@ def validate_auxiliary_csv(validation: Validation) -> None:
                 validation.check(bool(key) and key not in seen, f"candidates.csv:{line_number}: invalid or duplicate Repository")
                 seen.add(key)
                 validation.check(bool(DATE_PATTERN.fullmatch(row.get("Discovered", ""))), f"candidates.csv:{line_number}: invalid Discovered")
+                validation.check(bool(DATE_PATTERN.fullmatch(row.get("Created", ""))), f"candidates.csv:{line_number}: invalid Created")
+                validation.check(bool(DATE_PATTERN.fullmatch(row.get("Last Update", ""))), f"candidates.csv:{line_number}: invalid Last Update")
+                validation.check(
+                    row.get("Last Update", "") >= MIN_LAST_UPDATE,
+                    f"candidates.csv:{line_number}: repository is outside the lifecycle window",
+                )
                 validation.check(row.get("Review Status") in {"review", "accepted", "rejected"}, f"candidates.csv:{line_number}: invalid Review Status")
+                validation.check(row.get("Archived") == "false", f"candidates.csv:{line_number}: archived candidates must be removed")
+                validation.check(row.get("Fork") in {"true", "false"}, f"candidates.csv:{line_number}: invalid Fork")
+                if row.get("Review Status") == "accepted":
+                    current = canonical.get(key)
+                    validation.check(current is not None, f"candidates.csv:{line_number}: accepted candidate is missing from canonical data")
+                    if current is not None:
+                        for field in (
+                            "Hosting",
+                            "Created",
+                            "Last Update",
+                            "Stars",
+                            "License",
+                            "Archived",
+                            "Fork",
+                        ):
+                            validation.check(
+                                row.get(field, "") == current.get(field, ""),
+                                f"candidates.csv:{line_number}: {field} differs from canonical data",
+                            )
                 try:
                     stars_as_int(row.get("Stars", ""))
                     int(row.get("Score", ""))
@@ -218,6 +316,12 @@ def validate_auxiliary_csv(validation: Validation) -> None:
                 seen_snapshots.add(snapshot_key)
                 validation.check(bool(DATE_PATTERN.fullmatch(row.get("Date", ""))), f"snapshots.csv:{line_number}: invalid Date")
                 validation.check(bool(DATE_PATTERN.fullmatch(row.get("Last Update", ""))), f"snapshots.csv:{line_number}: invalid Last Update")
+                validation.check(
+                    repository_key(row.get("Repository", "")) in canonical
+                    or row.get("Repository ID", "") in canonical_ids,
+                    f"snapshots.csv:{line_number}: snapshot repository is missing from canonical data",
+                )
+                validation.check(row.get("Archived") == "false", f"snapshots.csv:{line_number}: archived snapshots must be removed")
                 try:
                     stars_as_int(row.get("Stars", ""))
                 except ValueError:
@@ -240,7 +344,9 @@ def main() -> int:
     _, rows = validate_catalog(validation)
     validate_markdown(validation, rows)
     validate_local_links(validation)
-    validate_auxiliary_csv(validation)
+    validate_update_badges(validation, rows)
+    validate_navigation(validation)
+    validate_auxiliary_csv(validation, rows)
     validation.check(not (ROOT / "SOCIAL.md").exists(), "SOCIAL.md must remain merged into README.md")
 
     if validation.errors:

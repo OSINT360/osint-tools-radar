@@ -8,8 +8,9 @@
     <img alt="Metadata refresh: weekly" src="https://img.shields.io/badge/metadata-weekly-0969da?style=flat-square">
     <img alt="Candidate discovery: daily" src="https://img.shields.io/badge/discovery-daily-8250df?style=flat-square">
     <img alt="Third-party code execution: disabled" src="https://img.shields.io/badge/third--party_code-not_executed-1f883d?style=flat-square">
+    <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <a href="../AGENTIC.md">Agentic AI OSINT</a> · <a href="../osint-repositories.csv">Open-source Repository Database</a> · <a href="README.md">Monitoring</a></strong></p>
+  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## Operating model
@@ -50,10 +51,15 @@ python3 .radar/scripts/render_catalog.py --check
 python3 .radar/scripts/validate_catalog.py
 ```
 
-Refresh GitHub metadata and save a daily snapshot. A token is recommended for sufficient API quota:
+Refresh GitHub metadata and save a daily snapshot. A token is required for the batched full-catalogue query:
 
 ```bash
-GITHUB_TOKEN=github_token python3 .radar/scripts/refresh_metadata.py --write --snapshot --delay 0.1
+GITHUB_TOKEN=github_token python3 .radar/scripts/refresh_metadata.py \
+  --write \
+  --snapshot \
+  --drop-archived \
+  --drop-stale-before 2020-01-01 \
+  --delay 0.1
 python3 .radar/scripts/render_catalog.py --write
 python3 .radar/scripts/validate_catalog.py
 ```
@@ -85,12 +91,16 @@ Reports are operational artifacts and are not committed by the scheduled workflo
 Automated discovery provides suggestions, not final classifications. Before accepting a repository, verify that it:
 
 - contains meaningful, publicly accessible source code;
-- declares an open-source software license, or has its license status explicitly flagged for manual verification;
 - has a practical OSINT, SOCMINT, GEOINT, recon, CTI, research, or evidence-analysis use case;
-- is not merely a link collection, product landing page, prompt stub, or duplicate;
+- is not merely a link collection, product landing page, prompt stub, exact repository duplicate, or canonical mirror;
 - has a neutral description supported by its implementation and documentation;
 - is assigned to the most specific target and catalogue category;
-- documents any claimed platform or agent compatibility.
+- documents any claimed platform or agent compatibility;
+- has a meaningful latest commit on its default branch rather than activity limited to abandoned side branches.
+
+Functional overlap with another accepted project is not a rejection reason. Competing implementations remain useful for market coverage when each repository has a distinct, maintained implementation. Fork status alone is also not a rejection reason when the fork is the maintained implementation or an active successor.
+
+Do not remove a project solely because one optional entry point or installation path fails. Check its documented primary workflow, current platform dependencies, and confirmed operational use before replacing it.
 
 Reject a candidate:
 
@@ -136,12 +146,13 @@ Scheduled workflows use the repository-provided `GITHUB_TOKEN`. The repository m
 
 ## Metadata and lifecycle policy
 
-- `Last Update` records the latest repository push date reported by the hosting platform.
+- `Last Update` records the date of the latest commit on the repository's default branch for GitHub records. Other hosts use the most precise repository activity date exposed by their API and are checked during review.
 - `Stars` records an exact point-in-time value, never an approximation.
 - `Verified` records the last successful metadata check.
-- `License` records the declared open-source license; blank, missing, or `NOASSERTION` values require manual review and do not prove open-source status.
 - Renamed or transferred GitHub repositories are replaced with the canonical API URL.
-- Archived repositories remain visible and are marked as archived until a review decides whether historical value justifies retention.
+- Repositories confirmed as archived are removed from the canonical catalogue and active monitoring data. GitHub status is enforced by the scheduled metadata refresh; other hosts are checked during review.
+- Repository age is not a removal criterion. Repositories whose latest default-branch commit predates `2020-01-01` are removed, while older projects with current maintenance remain eligible.
+- A recent push does not by itself prove operational usefulness. Stale integrations are reviewed for deprecated APIs, unsupported runtimes, broken installation paths, explicit maintenance notices, and maintained successors.
 - A confirmed `404` marks a repository as unavailable. Transient network and API failures do not change repository status.
 - Descriptions, targets, categories, types, and compatibility labels are never overwritten by metadata refreshes.
 

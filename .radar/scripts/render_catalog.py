@@ -86,15 +86,16 @@ def replace_number_badge(text: str, alt_label: str, slug: str, value: int) -> st
     )
 
 
-def replace_verified_date(text: str, date: str) -> str:
+def replace_update_date(text: str, date: str) -> str:
     if not date:
         return text
     badge_date = date.replace("-", "--")
-    text = re.sub(r'alt="Last verified: \d{4}-\d{2}-\d{2}"', f'alt="Last verified: {date}"', text)
-    text = re.sub(r"(badge/last_verified-)\d{4}--\d{2}--\d{2}(-)", rf"\g<1>{badge_date}\2", text)
-    text = re.sub(r"(last verified on \*\*)\d{4}-\d{2}-\d{2}(\*\*)", rf"\g<1>{date}\2", text, flags=re.IGNORECASE)
-    text = re.sub(r"(captured on \*\*)\d{4}-\d{2}-\d{2}(\*\*)", rf"\g<1>{date}\2", text, flags=re.IGNORECASE)
-    return text
+    text = re.sub(r'alt="Last update: \d{4}-\d{2}-\d{2}"', f'alt="Last update: {date}"', text)
+    return re.sub(
+        r"(badge/last_update-)\d{4}--\d{2}--\d{2}(-)",
+        rf"\g<1>{badge_date}\2",
+        text,
+    )
 
 
 def replace_discord_empty_state(text: str, count: int) -> str:
@@ -141,7 +142,7 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     )
     text = replace_discord_empty_state(text, counts["Discord"])
     text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_verified_date(text, date)
+    return replace_update_date(text, date)
 
 
 def render_emerging(text: str, rows: list[dict[str, str]], date: str) -> str:
@@ -149,7 +150,7 @@ def render_emerging(text: str, rows: list[dict[str, str]], date: str) -> str:
     text = replace_section_table(text, "Projects", [format_markdown_row(row) for row in selected])
     text = replace_number_badge(text, "Emerging projects", "emerging_projects", len(selected))
     text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_verified_date(text, date)
+    return replace_update_date(text, date)
 
 
 def render_agentic(text: str, rows: list[dict[str, str]], date: str) -> str:
@@ -167,7 +168,11 @@ def render_agentic(text: str, rows: list[dict[str, str]], date: str) -> str:
     text = replace_number_badge(text, "Research integrations", "research_integrations", research_count)
     text = replace_number_badge(text, "Total projects", "total_projects", total)
     text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_verified_date(text, date)
+    return replace_update_date(text, date)
+
+
+def render_monitoring(text: str, rows: list[dict[str, str]], date: str) -> str:
+    return replace_update_date(text, date)
 
 
 def rendered_documents() -> dict[Path, str]:
@@ -177,6 +182,7 @@ def rendered_documents() -> dict[Path, str]:
         ROOT / "README.md": render_readme,
         ROOT / "EMERGING.md": render_emerging,
         ROOT / "AGENTIC.md": render_agentic,
+        ROOT / ".radar" / "README.md": render_monitoring,
     }
     rendered: dict[Path, str] = {}
     for path, renderer in renderers.items():
