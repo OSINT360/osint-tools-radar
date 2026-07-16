@@ -17,6 +17,13 @@
 
 OSINT Tools Radar is a repository-first catalogue of open-source OSINT software. Every published entry represents a public source-code repository containing an identifiable tool or integration with a practical investigative use case. Project names link directly to the repositories that contain their implementations.
 
+| File | What it contains |
+|---|---|
+| [`README.md`](README.md) | Main catalogue organized by investigation target and social platform. |
+| [`EMERGING.md`](EMERGING.md) | Early-stage tools and projects worth monitoring. |
+| [`AGENTIC.md`](AGENTIC.md) | OSINT skills, plugins, MCP servers, and AI-agent integrations. |
+| [`TIMELINE.md`](TIMELINE.md) | Chronological view of catalogue additions, newest first. |
+
 > [!IMPORTANT]
 > Only implementation-bearing repositories with publicly accessible source code are included. Closed-source services, commercial tools without public code, link collections, prompt-only lists, datasets, and repository stubs are excluded.
 
