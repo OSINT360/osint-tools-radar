@@ -27,6 +27,7 @@
 "GitHub OSINT skill","GitHub","osint skill in:name,description,readme","created","OSINT investigation and intelligence","Agentic / OSINT investigation and intelligence","true"
 "GitHub research skill","GitHub","research skill in:name,description,readme","created","Web research and source discovery","Agentic / Web research and source discovery","true"
 "GitHub active OSINT backfill","GitHub","osint in:name,description,readme","pushed","General","Emerging","true"
+"Cyber Detective Telegram","Telegram Channel","https://t.me/s/cybdetective","updated","General","General","true"
 "GitLab OSINT","GitLab","osint","created","General","Emerging","true"
 "GitLab reconnaissance","GitLab","reconnaissance","created","Reconnaissance and threat intelligence","Agentic / Reconnaissance and threat intelligence","true"
 "Codeberg OSINT","Codeberg","osint","created","General","Emerging","true"

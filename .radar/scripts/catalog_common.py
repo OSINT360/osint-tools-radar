@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import csv
 import re
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Iterable
 
@@ -14,6 +15,13 @@ RADAR_ROOT = ROOT / ".radar"
 DATA_ROOT = RADAR_ROOT / "data"
 CATALOG_PATH = ROOT / "osint-repositories.csv"
 MIN_LAST_UPDATE = "2020-01-01"
+NEW_PROJECT_WINDOW_DAYS = 14
+NEW_PROJECT_MARKER = (
+    '<img src=".github/assets/new-dot.svg" width="6" height="6" alt="">'
+)
+NEW_PROJECT_LEGEND = (
+    f"{NEW_PROJECT_MARKER} marks projects added to the catalogue within the last 14 days."
+)
 
 PUBLIC_COLUMNS = [
     "Project",
@@ -22,6 +30,7 @@ PUBLIC_COLUMNS = [
     "Type",
     "Compatibility",
     "Description",
+    "Added",
     "Created",
     "Last Update",
     "Stars",
@@ -173,9 +182,11 @@ def markdown_text(value: str) -> str:
     return value.replace("|", "\\|").replace("\n", " ").strip()
 
 
-def format_markdown_row(row: dict[str, str]) -> str:
+def format_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
+    marker = f"{NEW_PROJECT_MARKER} " if is_new else ""
+    project = f"{marker}[{markdown_text(row['Project'])}]({row['Repository']})"
     return (
-        f"| [{markdown_text(row['Project'])}]({row['Repository']}) "
+        f"| {project} "
         f"| {markdown_text(row['Type']) or '-'} "
         f"| {markdown_text(row['Compatibility']) or '-'} "
         f"| {markdown_text(row['Description'])} "
@@ -194,3 +205,21 @@ def verified_date(rows: Iterable[dict[str, str]]) -> str:
 
 def repository_key(url: str) -> str:
     return url.strip().lower().removesuffix("/").removesuffix(".git")
+
+
+def recent_repository_keys(
+    rows: Iterable[dict[str, str]],
+    reference_date: str,
+    window_days: int = NEW_PROJECT_WINDOW_DAYS,
+) -> set[str]:
+    if not reference_date:
+        return set()
+
+    current = date.fromisoformat(reference_date)
+    earliest = current - timedelta(days=window_days - 1)
+    return {
+        repository_key(row.get("Repository", ""))
+        for row in rows
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", row.get("Added", ""))
+        and earliest <= date.fromisoformat(row["Added"]) <= current
+    }

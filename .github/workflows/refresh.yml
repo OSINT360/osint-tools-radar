@@ -53,7 +53,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "+refs/heads/$branch:refs/remotes/origin/$branch" || true
           git checkout -B "$branch"
-          git add osint-repositories.csv .radar/README.md .radar/data/candidates.csv .radar/data/snapshots.csv README.md EMERGING.md AGENTIC.md
+          git add osint-repositories.csv .radar/README.md .radar/data/candidates.csv .radar/data/snapshots.csv README.md EMERGING.md AGENTIC.md TIMELINE.md
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0

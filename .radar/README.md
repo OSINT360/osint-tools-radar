@@ -10,18 +10,20 @@
     <img alt="Third-party code execution: disabled" src="https://img.shields.io/badge/third--party_code-not_executed-1f883d?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
+  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../TIMELINE.md">Catalogue Timeline</a> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## Operating model
 
 `../osint-repositories.csv` is the canonical, deduplicated repository database. The Markdown tables are generated views of accepted open-source tool and integration records. Candidate discovery is intentionally separate from publication.
 
+The canonical CSV stores the publication date in its `Added` column. The renderer places a 6 px green dot before projects in public Markdown views for 14 days after acceptance.
+
 ```text
 .radar/data/sources.csv -> discover_candidates.py -> .radar/data/candidates.csv -> human review
                                                                            -> osint-repositories.csv
 GitHub API -> refresh_metadata.py -> osint-repositories.csv + .radar/data/snapshots.csv
-osint-repositories.csv -> render_catalog.py -> README.md + EMERGING.md + AGENTIC.md
+osint-repositories.csv -> render_catalog.py -> README.md + EMERGING.md + AGENTIC.md + TIMELINE.md
 all catalogue files -> validate_catalog.py -> pass or fail
 ```
 
@@ -31,13 +33,14 @@ The monitor never clones, imports, installs, or executes code from catalogued re
 
 | File | Purpose |
 |---|---|
-| `../osint-repositories.csv` | Canonical accepted open-source tool records and current repository metadata. |
+| `../osint-repositories.csv` | Canonical accepted open-source tool records, publication dates, and current repository metadata. |
 | `data/candidates.csv` | Automatically discovered repositories awaiting an explicit decision. |
 | `data/sources.csv` | Enabled discovery queries, providers, windows, and suggested classifications. |
 | `data/snapshots.csv` | Point-in-time metadata used for trend and change reporting. |
 | `../README.md` | Generated main and social-platform catalogue views. |
 | `../EMERGING.md` | Generated early-stage project view. |
 | `../AGENTIC.md` | Generated skills, plugins, MCP, and agent integration views. |
+| `../TIMELINE.md` | Generated chronological view of catalogue additions. |
 
 ## Local commands
 
@@ -76,6 +79,17 @@ Persist newly found candidates:
 
 ```bash
 GITHUB_TOKEN=github_token python3 .radar/scripts/discover_candidates.py --write --lookback-days 14 --report discovery-report.md
+```
+
+Run a one-off historical scan of the Cyber Detective public channel:
+
+```bash
+GITHUB_TOKEN=github_token python3 .radar/scripts/discover_candidates.py \
+  --write \
+  --source "Cyber Detective Telegram" \
+  --since 2026-01-01 \
+  --max-per-source 1000 \
+  --report cyber-detective-backfill.md
 ```
 
 Generate a market-watch summary from candidates and snapshots:
@@ -133,8 +147,9 @@ Accept a project into more than one generated view by repeating `--category`. Co
 | GitLab Projects API | Public OSINT and recon project search | None for public results |
 | Codeberg API | Public repository search | None for public results |
 | Official MCP Registry | OSINT, recon, and research server search | None for public results |
+| Cyber Detective Telegram | Direct GitHub, GitLab, and Codeberg links shared in public channel posts | None for public posts |
 
-Edit `.radar/data/sources.csv` to add, disable, or narrow a query. A new provider requires a corresponding adapter in `.radar/scripts/discover_candidates.py`. Keep queries focused enough to make manual review practical.
+Edit `.radar/data/sources.csv` to add, disable, or narrow a query. A new provider requires a corresponding adapter in `.radar/scripts/discover_candidates.py`. Telegram channel adapters treat posts as leads and only send direct public repository links to manual review. Keep queries focused enough to make manual review practical.
 
 ## Scheduled workflows
 

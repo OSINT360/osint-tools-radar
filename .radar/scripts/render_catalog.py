@@ -11,15 +11,23 @@ from pathlib import Path
 
 from catalog_common import (
     AGENTIC_SECTIONS,
+    NEW_PROJECT_MARKER,
     README_SECTIONS,
     ROOT,
     TABLE_HEADER,
     format_markdown_row,
     load_catalog,
+    markdown_text,
+    recent_repository_keys,
+    repository_key,
     rows_for_category,
     split_values,
+    stars_as_int,
     verified_date,
 )
+
+TIMELINE_HEADER = "| Project | Target | Categories | Description | Stars ⭐ |"
+TIMELINE_ALIGNMENT = "|:---|:---|:---|:---|---:|"
 
 
 def count_label(count: int) -> str:
@@ -59,7 +67,14 @@ def replace_section_table(text: str, label: str, rendered_rows: list[str]) -> st
 
     first_row = header_index + 2
     last_row = first_row
-    while last_row < len(lines) and lines[last_row].startswith("| ["):
+    marker_pattern = (
+        r'(?:<img src="\.github/assets/new-dot\.svg"[^>]*>'
+        r"|<sup>🟢</sup>|🟢) "
+    )
+    while last_row < len(lines) and re.match(
+        rf"^\| (?:{marker_pattern})?\[",
+        lines[last_row],
+    ):
         last_row += 1
     lines[first_row:last_row] = rendered_rows
     return "\n".join(lines) + "\n"
@@ -107,12 +122,27 @@ def replace_discord_empty_state(text: str, count: int) -> str:
     return pattern.sub(replacement, text)
 
 
-def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
+def rendered_rows(
+    rows: list[dict[str, str]],
+    recent_keys: set[str],
+) -> list[str]:
+    return [
+        format_markdown_row(row, repository_key(row["Repository"]) in recent_keys)
+        for row in rows
+    ]
+
+
+def render_readme(
+    text: str,
+    rows: list[dict[str, str]],
+    date: str,
+    recent_keys: set[str],
+) -> str:
     counts: dict[str, int] = {}
     for label, category in README_SECTIONS:
         selected = rows_for_category(rows, category)
         counts[label] = len(selected)
-        text = replace_section_table(text, label, [format_markdown_row(row) for row in selected])
+        text = replace_section_table(text, label, rendered_rows(selected, recent_keys))
         text = replace_toc_count(text, label, len(selected))
 
     readme_count = sum(counts.values())
@@ -124,11 +154,9 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     agentic_count = sum(len(rows_for_category(rows, category)) for _, category in AGENTIC_SECTIONS)
     total_entries = readme_count + emerging_count + agentic_count
 
-    text = replace_number_badge(text, "Open-source tools", "open--source_tools", readme_count)
     text = replace_number_badge(text, "Emerging projects", "emerging", emerging_count)
     text = replace_number_badge(text, "Social platform entries", "social_platforms", social_count)
     text = replace_number_badge(text, "Agentic integrations", "agentic_integrations", agentic_count)
-    text = replace_number_badge(text, "Source repositories", "source_repositories", len(rows))
     text = replace_number_badge(text, "Catalogue entries", "catalogue_entries", total_entries)
     text = re.sub(
         r"(\[Emerging projects\]\(EMERGING\.md\) <sup>)\d+\s+projects?(</sup>)",
@@ -145,20 +173,30 @@ def render_readme(text: str, rows: list[dict[str, str]], date: str) -> str:
     return replace_update_date(text, date)
 
 
-def render_emerging(text: str, rows: list[dict[str, str]], date: str) -> str:
+def render_emerging(
+    text: str,
+    rows: list[dict[str, str]],
+    date: str,
+    recent_keys: set[str],
+) -> str:
     selected = rows_for_category(rows, "Emerging")
-    text = replace_section_table(text, "Projects", [format_markdown_row(row) for row in selected])
+    text = replace_section_table(text, "Projects", rendered_rows(selected, recent_keys))
     text = replace_number_badge(text, "Emerging projects", "emerging_projects", len(selected))
     text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
     return replace_update_date(text, date)
 
 
-def render_agentic(text: str, rows: list[dict[str, str]], date: str) -> str:
+def render_agentic(
+    text: str,
+    rows: list[dict[str, str]],
+    date: str,
+    recent_keys: set[str],
+) -> str:
     counts: dict[str, int] = {}
     for label, category in AGENTIC_SECTIONS:
         selected = rows_for_category(rows, category)
         counts[label] = len(selected)
-        text = replace_section_table(text, label, [format_markdown_row(row) for row in selected])
+        text = replace_section_table(text, label, rendered_rows(selected, recent_keys))
         text = replace_toc_count(text, label, len(selected))
 
     research_count = counts["Web research and source discovery"] + counts["Academic and structured research"]
@@ -171,22 +209,151 @@ def render_agentic(text: str, rows: list[dict[str, str]], date: str) -> str:
     return replace_update_date(text, date)
 
 
-def render_monitoring(text: str, rows: list[dict[str, str]], date: str) -> str:
+def render_monitoring(
+    text: str,
+    rows: list[dict[str, str]],
+    date: str,
+    recent_keys: set[str],
+) -> str:
     return replace_update_date(text, date)
+
+
+def timeline_row(row: dict[str, str]) -> str:
+    project = f"[{markdown_text(row['Project'])}]({row['Repository']})"
+    targets = "<br>".join(markdown_text(value) for value in split_values(row["Target"])) or "-"
+    categories = (
+        "<br>".join(markdown_text(value) for value in split_values(row["Categories"]))
+        or "-"
+    )
+    return (
+        f"| {project} "
+        f"| {targets} "
+        f"| {categories} "
+        f"| {markdown_text(row['Description'])} "
+        f"| {stars_as_int(row['Stars']):,} |"
+    )
+
+
+def render_timeline(
+    text: str,
+    rows: list[dict[str, str]],
+    date: str,
+    recent_keys: set[str],
+) -> str:
+    del text, recent_keys
+    dated: dict[str, list[dict[str, str]]] = {}
+    legacy: list[dict[str, str]] = []
+    for row in rows:
+        added = row.get("Added", "")
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", added):
+            dated.setdefault(added, []).append(row)
+        else:
+            legacy.append(row)
+
+    dated_count = sum(len(group) for group in dated.values())
+    badge_date = date.replace("-", "--")
+    lines = [
+        '<a id="top"></a>',
+        "",
+        '<div align="center">',
+        "  <h1>OSINT Tools Radar Timeline</h1>",
+        "  <p>A chronological view of projects added to the catalogue.</p>",
+        "  <p>",
+        (
+            f'    <img alt="Dated additions: {dated_count}" '
+            f'src="https://img.shields.io/badge/dated_additions-'
+            f'{dated_count}-0969da?style=flat-square">'
+        ),
+        (
+            f'    <img alt="Catalogue projects: {len(rows)}" '
+            f'src="https://img.shields.io/badge/catalogue_projects-'
+            f'{len(rows)}-8250df?style=flat-square">'
+        ),
+        (
+            f'    <img alt="Last update: {date}" '
+            f'src="https://img.shields.io/badge/last_update-'
+            f'{badge_date}-1f883d?style=flat-square">'
+        ),
+        "  </p>",
+        (
+            '  <p><strong><a href="TIMELINE.md">Catalogue Timeline</a></strong> · '
+            '<a href="README.md">OSINT Tools Radar</a> · '
+            '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
+            '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+        "</div>",
+        "",
+        (
+            "> Projects are grouped by the date stored in the canonical `Added` "
+            "column. Newest catalogue entries appear first."
+        ),
+        "",
+    ]
+
+    for added in sorted(dated, reverse=True):
+        group = sorted(dated[added], key=lambda row: row["Project"].casefold())
+        count = len(group)
+        lines.extend(
+            [
+                f"## {added} <sup>{count} {count_label(count)}</sup>",
+                "",
+                TIMELINE_HEADER,
+                TIMELINE_ALIGNMENT,
+                *(timeline_row(row) for row in group),
+                "",
+                '<p align="right"><a href="#top">Back to top ↑</a></p>',
+                "",
+            ]
+        )
+
+    legacy = sorted(legacy, key=lambda row: row["Project"].casefold())
+    legacy_count = len(legacy)
+    lines.extend(
+        [
+            "<details>",
+            (
+                "<summary><strong>Legacy entries without a catalogue date</strong> "
+                f"<sup>{legacy_count} {count_label(legacy_count)}</sup></summary>"
+            ),
+            "",
+            (
+                "These projects predate reliable per-entry addition tracking. "
+                "They are listed alphabetically without an invented date."
+            ),
+            "",
+            TIMELINE_HEADER,
+            TIMELINE_ALIGNMENT,
+            *(timeline_row(row) for row in legacy),
+            "",
+            "</details>",
+            "",
+            '<p align="right"><a href="#top">Back to top ↑</a></p>',
+            "",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def rendered_documents() -> dict[Path, str]:
     _, rows = load_catalog()
     date = verified_date(rows)
+    recent_keys = recent_repository_keys(rows, date)
     renderers = {
         ROOT / "README.md": render_readme,
         ROOT / "EMERGING.md": render_emerging,
         ROOT / "AGENTIC.md": render_agentic,
+        ROOT / "TIMELINE.md": render_timeline,
         ROOT / ".radar" / "README.md": render_monitoring,
     }
     rendered: dict[Path, str] = {}
     for path, renderer in renderers.items():
-        rendered[path] = renderer(path.read_text(encoding="utf-8"), rows, date)
+        rendered[path] = renderer(
+            path.read_text(encoding="utf-8"),
+            rows,
+            date,
+            recent_keys,
+        )
     return rendered
 
 
