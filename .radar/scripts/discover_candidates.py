@@ -11,13 +11,20 @@ import re
 import sys
 import time
 from datetime import date, datetime, timedelta, timezone
+from html import unescape
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, urlparse
 from urllib.request import Request, urlopen
 
-from catalog_common import DATA_ROOT, load_catalog, repository_key, write_csv
+from catalog_common import (
+    DATA_ROOT,
+    MIN_LAST_UPDATE,
+    load_catalog,
+    repository_key,
+    write_csv,
+)
 
 
 CANDIDATE_PATH = DATA_ROOT / "candidates.csv"
@@ -52,6 +59,29 @@ class HttpClient:
             try:
                 with urlopen(Request(url, headers=headers), timeout=45) as response:
                     return json.load(response)
+            except HTTPError as error:
+                if error.code in {403, 429, 500, 502, 503, 504} and attempt < 2:
+                    retry_after = int(error.headers.get("Retry-After", "0") or "0")
+                    time.sleep(max(retry_after, 2 ** (attempt + 1)))
+                    continue
+                raise
+            except (URLError, TimeoutError) as error:
+                if attempt == 2:
+                    raise RuntimeError(str(error)) from error
+                time.sleep(2 ** (attempt + 1))
+        raise RuntimeError(f"Unable to fetch {url}")
+
+    def get_text(self, url: str) -> str:
+        headers = {
+            "User-Agent": "osint-tools-radar",
+            "Accept": "text/html,application/xhtml+xml",
+        }
+        for attempt in range(3):
+            if self.delay:
+                time.sleep(self.delay)
+            try:
+                with urlopen(Request(url, headers=headers), timeout=45) as response:
+                    return response.read().decode("utf-8", errors="replace")
             except HTTPError as error:
                 if error.code in {403, 429, 500, 502, 503, 504} and attempt < 2:
                     retry_after = int(error.headers.get("Retry-After", "0") or "0")
@@ -226,11 +256,206 @@ def mcp_items(client: HttpClient, source: dict[str, str], since: str, limit: int
     return results
 
 
+def normalize_repository_url(value: str) -> str:
+    parsed = urlparse(unescape(value.strip()))
+    host = parsed.netloc.casefold().removeprefix("www.")
+    parts = [part for part in parsed.path.split("/") if part]
+    if host == "github.com":
+        if len(parts) < 2 or parts[0].casefold() in {
+            "features", "marketplace", "orgs", "search", "sponsors", "topics", "users",
+        }:
+            return ""
+        parts = parts[:2]
+    elif host == "codeberg.org":
+        if len(parts) < 2:
+            return ""
+        parts = parts[:2]
+    elif host == "gitlab.com":
+        if "-" in parts:
+            parts = parts[:parts.index("-")]
+        if len(parts) < 2:
+            return ""
+    else:
+        return ""
+    parts[-1] = parts[-1].removesuffix(".git")
+    return f"https://{host}/{'/'.join(parts)}"
+
+
+def repository_item(client: HttpClient, repository_url: str, evidence: str) -> dict[str, Any] | None:
+    parsed = urlparse(repository_url)
+    parts = [part for part in parsed.path.split("/") if part]
+    host = parsed.netloc.casefold()
+    if host == "github.com":
+        owner, repository = parts[:2]
+        metadata = client.get(
+            f"https://api.github.com/repos/{quote(owner)}/{quote(repository)}",
+            github=True,
+        )
+        if metadata.get("archived"):
+            return None
+        license_data = metadata.get("license") or {}
+        license_id = license_data.get("spdx_id") if isinstance(license_data, dict) else ""
+        if license_id == "NOASSERTION":
+            license_id = ""
+        return {
+            "name": metadata.get("name"),
+            "url": metadata.get("html_url") or repository_url,
+            "hosting": "GitHub",
+            "description": metadata.get("description"),
+            "created": metadata.get("created_at"),
+            "updated": metadata.get("pushed_at"),
+            "stars": metadata.get("stargazers_count"),
+            "language": metadata.get("language"),
+            "license": license_id,
+            "archived": metadata.get("archived"),
+            "fork": metadata.get("fork"),
+            "topics": metadata.get("topics") or [],
+            "size": metadata.get("size") or 0,
+            "evidence": evidence,
+        }
+    if host == "gitlab.com":
+        project_path = "/".join(parts)
+        metadata = client.get(
+            f"https://gitlab.com/api/v4/projects/{quote(project_path, safe='')}"
+        )
+        if metadata.get("archived"):
+            return None
+        return {
+            "name": metadata.get("name"),
+            "url": metadata.get("web_url") or repository_url,
+            "hosting": "GitLab",
+            "description": metadata.get("description"),
+            "created": metadata.get("created_at"),
+            "updated": metadata.get("last_activity_at"),
+            "stars": metadata.get("star_count"),
+            "language": "",
+            "license": "",
+            "archived": metadata.get("archived"),
+            "fork": bool(metadata.get("forked_from_project")),
+            "topics": metadata.get("topics") or [],
+            "size": 0,
+            "evidence": evidence,
+        }
+    if host == "codeberg.org":
+        owner, repository = parts[:2]
+        metadata = client.get(
+            f"https://codeberg.org/api/v1/repos/{quote(owner)}/{quote(repository)}"
+        )
+        if metadata.get("archived"):
+            return None
+        return {
+            "name": metadata.get("name"),
+            "url": metadata.get("html_url") or repository_url,
+            "hosting": "Codeberg",
+            "description": metadata.get("description"),
+            "created": metadata.get("created_at"),
+            "updated": metadata.get("updated_at"),
+            "stars": metadata.get("stars_count"),
+            "language": metadata.get("language"),
+            "license": "",
+            "archived": metadata.get("archived"),
+            "fork": metadata.get("fork"),
+            "topics": metadata.get("topics") or [],
+            "size": metadata.get("size") or 0,
+            "evidence": evidence,
+        }
+    return None
+
+
+def telegram_posts(page: str) -> tuple[list[dict[str, Any]], str]:
+    chunks = re.split(r'(?=<div class="tgme_widget_message_wrap\b)', page)
+    posts: list[dict[str, Any]] = []
+    for chunk in chunks:
+        post_match = re.search(r'data-post="([^"]+/(\d+))"', chunk)
+        date_match = re.search(r'<time datetime="([^"]+)"', chunk)
+        if not post_match or not date_match:
+            continue
+        links = [
+            unescape(link)
+            for link in re.findall(r'href="(https?://[^"]+)"', chunk)
+        ]
+        posts.append(
+            {
+                "id": post_match.group(2),
+                "date": iso_date(date_match.group(1)),
+                "url": f"https://t.me/{post_match.group(1)}",
+                "links": links,
+            }
+        )
+    before_match = re.search(r'data-before="(\d+)"', page)
+    return posts, before_match.group(1) if before_match else ""
+
+
+def telegram_items(
+    client: HttpClient,
+    source: dict[str, str],
+    since: str,
+    limit: int,
+) -> list[dict[str, Any]]:
+    since_date = date.fromisoformat(since)
+    base_url = source["Query"].split("?", 1)[0].rstrip("/")
+    before = ""
+    seen_pages: set[str] = set()
+    leads: dict[str, tuple[str, str]] = {}
+
+    while True:
+        page_url = f"{base_url}?before={before}" if before else base_url
+        if page_url in seen_pages:
+            break
+        seen_pages.add(page_url)
+        posts, next_before = telegram_posts(client.get_text(page_url))
+        if not posts:
+            break
+
+        dated_posts = [
+            post for post in posts
+            if post["date"] and date.fromisoformat(post["date"]) >= since_date
+        ]
+        for post in dated_posts:
+            for link in post["links"]:
+                repository_url = normalize_repository_url(link)
+                if repository_url:
+                    leads.setdefault(
+                        repository_key(repository_url),
+                        (repository_url, post["url"]),
+                    )
+
+        oldest = min(date.fromisoformat(post["date"]) for post in posts if post["date"])
+        if oldest < since_date or not next_before or len(leads) >= limit:
+            break
+        before = next_before
+
+    results: list[dict[str, Any]] = []
+    for repository_url, evidence in list(leads.values())[:limit]:
+        try:
+            item = repository_item(client, repository_url, evidence)
+        except Exception as error:
+            print(
+                f"Telegram repository skipped: {repository_url}: {error}",
+                file=sys.stderr,
+            )
+            continue
+        if item is None:
+            continue
+        created = iso_date(item.get("created"))
+        updated = iso_date(item.get("updated"))
+        if not created or not updated or updated < MIN_LAST_UPDATE:
+            print(
+                f"Telegram repository skipped: {repository_url}: "
+                "missing or stale lifecycle dates",
+                file=sys.stderr,
+            )
+            continue
+        results.append(item)
+    return results
+
+
 ADAPTERS = {
     "GitHub": github_items,
     "GitLab": gitlab_items,
     "Codeberg": codeberg_items,
     "MCP Registry": mcp_items,
+    "Telegram Channel": telegram_items,
 }
 
 
@@ -273,6 +498,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true", help="Write .radar/data/candidates.csv")
     parser.add_argument("--lookback-days", type=int, default=14)
+    parser.add_argument("--since", help="Override the discovery window start with YYYY-MM-DD")
     parser.add_argument("--max-per-source", type=int, default=100)
     parser.add_argument("--provider", action="append", default=[], help="Limit providers")
     parser.add_argument("--source", action="append", default=[], help="Limit exact configured source names")
@@ -281,7 +507,14 @@ def main() -> int:
     parser.add_argument("--report", type=Path, help="Write a Markdown discovery report")
     args = parser.parse_args()
 
-    since = (datetime.now(timezone.utc) - timedelta(days=args.lookback_days)).date().isoformat()
+    if args.since:
+        try:
+            since = date.fromisoformat(args.since).isoformat()
+        except ValueError:
+            print("--since must use YYYY-MM-DD", file=sys.stderr)
+            return 2
+    else:
+        since = (datetime.now(timezone.utc) - timedelta(days=args.lookback_days)).date().isoformat()
     _, catalog_rows = load_catalog()
     fields, existing_candidates = load_candidates()
     if args.seed_candidates and args.seed_candidates.exists():
@@ -337,7 +570,8 @@ def main() -> int:
                 "Last Update": iso_date(item.get("updated")), "Stars": str(item.get("stars") or 0),
                 "Language": clean_text(item.get("language")), "License": clean_text(item.get("license")),
                 "Archived": bool_text(item.get("archived")), "Fork": bool_text(item.get("fork")),
-                "Score": str(score), "Confidence": confidence(score), "Evidence": url,
+                "Score": str(score), "Confidence": confidence(score),
+                "Evidence": clean_text(item.get("evidence")) or url,
                 "Review Status": "review", "Notes": "",
             }
             new_rows.append(row)

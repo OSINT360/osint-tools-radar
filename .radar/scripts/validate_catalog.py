@@ -16,6 +16,8 @@ from catalog_common import (
     ALL_COLUMNS,
     DATA_ROOT,
     MIN_LAST_UPDATE,
+    NEW_PROJECT_LEGEND,
+    NEW_PROJECT_MARKER,
     RADAR_ROOT,
     README_SECTIONS,
     ROOT,
@@ -24,6 +26,7 @@ from catalog_common import (
     categories,
     format_markdown_row,
     load_catalog,
+    recent_repository_keys,
     repository_key,
     rows_for_category,
     source_files_for_categories,
@@ -62,7 +65,14 @@ def parse_markdown_tables(path: Path, validation: Validation) -> dict[str, list[
         )
         rows: list[str] = []
         cursor = index + 2
-        while cursor < len(lines) and lines[cursor].startswith("| ["):
+        marker_pattern = (
+            r'(?:<img src="\.github/assets/new-dot\.svg"[^>]*>'
+            r"|<sup>🟢</sup>|🟢) "
+        )
+        while cursor < len(lines) and re.match(
+            rf"^\| (?:{marker_pattern})?\[",
+            lines[cursor],
+        ):
             cells = [cell.strip() for cell in lines[cursor].strip().strip("|").split("|")]
             validation.check(
                 len(cells) == 7,
@@ -109,6 +119,16 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
         for field in ("Created", "Last Update", "Verified"):
             value = row.get(field, "")
             validation.check(bool(DATE_PATTERN.fullmatch(value)), f"osint-repositories.csv:{line_number}: invalid {field}: {value!r}")
+        added = row.get("Added", "")
+        validation.check(
+            not added or bool(DATE_PATTERN.fullmatch(added)),
+            f"osint-repositories.csv:{line_number}: invalid Added: {added!r}",
+        )
+        if added and DATE_PATTERN.fullmatch(added):
+            validation.check(
+                added <= row.get("Verified", ""),
+                f"osint-repositories.csv:{line_number}: Added is later than Verified",
+            )
         validation.check(
             row.get("Last Update", "") >= MIN_LAST_UPDATE,
             f"osint-repositories.csv:{line_number}: repository is outside the lifecycle window",
@@ -138,6 +158,7 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
 
 
 def validate_markdown(validation: Validation, rows: list[dict[str, str]]) -> None:
+    recent_keys = recent_repository_keys(rows, verified_date(rows))
     specifications = {
         ROOT / "README.md": README_SECTIONS,
         ROOT / "EMERGING.md": [("Projects", "Emerging")],
@@ -150,26 +171,95 @@ def validate_markdown(validation: Validation, rows: list[dict[str, str]]) -> Non
             validation.check(actual is not None, f"{path.name}: missing table for {label}")
             if actual is None:
                 continue
-            expected = [format_markdown_row(row) for row in rows_for_category(rows, category)]
+            expected = [
+                format_markdown_row(
+                    row,
+                    repository_key(row["Repository"]) in recent_keys,
+                )
+                for row in rows_for_category(rows, category)
+            ]
             validation.check(actual == expected, f"{path.name}: generated rows differ in {label}")
 
-        urls: list[str] = []
-        for table_rows in tables.values():
-            for line in table_rows:
-                match = re.search(r"\]\((https://[^)]+)\)", line)
-                if match:
-                    urls.append(repository_key(match.group(1)))
+        text = path.read_text(encoding="utf-8")
+        validation.check(
+            NEW_PROJECT_LEGEND in text,
+            f"{path.name}: missing new-project marker legend",
+        )
+
+        validation.check(
+            not re.search(
+                r'^\| (?:<img src="\.github/assets/new-dot\.svg"'
+                r'(?=[^>]*align=)[^>]*>|<sup>🟢</sup>|🟢) \[',
+                text,
+                flags=re.MULTILINE,
+            ),
+            f"{path.name}: contains legacy dot markers",
+        )
+        marker_pattern = (
+            r'<img src="\.github/assets/new-dot\.svg"[^>]*>'
+        )
+        urls = [
+            repository_key(url)
+            for url in re.findall(
+                rf"^\| (?:{marker_pattern} )?\[[^]]+\]\((https://[^)]+)\)",
+                text,
+                flags=re.MULTILINE,
+            )
+        ]
         validation.check(len(urls) == len(set(urls)), f"{path.name}: duplicate repository rows")
 
 
 def validate_local_links(validation: Validation) -> None:
-    for path in (ROOT / "README.md", ROOT / "EMERGING.md", ROOT / "AGENTIC.md", RADAR_ROOT / "README.md"):
+    for path in (
+        ROOT / "README.md",
+        ROOT / "EMERGING.md",
+        ROOT / "AGENTIC.md",
+        ROOT / "TIMELINE.md",
+        RADAR_ROOT / "README.md",
+    ):
         text = path.read_text(encoding="utf-8")
         for _, target in MARKDOWN_LINK_PATTERN.findall(text):
             if target.startswith(("http://", "https://", "#")):
                 continue
             local_path = path.parent / target.split("#", 1)[0]
             validation.check(local_path.exists(), f"{path.name}: missing local link target: {target}")
+
+
+def validate_timeline(
+    validation: Validation,
+    rows: list[dict[str, str]],
+) -> None:
+    path = ROOT / "TIMELINE.md"
+    text = path.read_text(encoding="utf-8")
+    actual = [
+        repository_key(url)
+        for url in re.findall(
+            r"^\| \[[^]]+\]\((https://[^)]+)\) \|",
+            text,
+            flags=re.MULTILINE,
+        )
+    ]
+    dated_groups: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for row in rows:
+        if DATE_PATTERN.fullmatch(row.get("Added", "")):
+            dated_groups[row["Added"]].append(row)
+    dated = [
+        row
+        for added in sorted(dated_groups, reverse=True)
+        for row in sorted(
+            dated_groups[added],
+            key=lambda item: item["Project"].casefold(),
+        )
+    ]
+    legacy = sorted(
+        (row for row in rows if not DATE_PATTERN.fullmatch(row.get("Added", ""))),
+        key=lambda row: row["Project"].casefold(),
+    )
+    expected = [repository_key(row["Repository"]) for row in dated + legacy]
+    validation.check(
+        actual == expected,
+        "TIMELINE.md: repository rows are missing, duplicated, or out of chronological order",
+    )
 
 
 def validate_update_badges(
@@ -205,18 +295,28 @@ def validate_navigation(validation: Validation) -> None:
             '<p><a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
             '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="TIMELINE.md">Added Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "EMERGING.md": (
             '<p><a href="EMERGING.md">Emerging Projects</a> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="TIMELINE.md">Added Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "AGENTIC.md": (
             '<p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<a href="TIMELINE.md">Added Timeline</a> · '
+            '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
+        ),
+        ROOT / "TIMELINE.md": (
+            '<p><strong><a href="TIMELINE.md">Added Timeline</a></strong> · '
+            '<a href="README.md">OSINT Tools Radar</a> · '
+            '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         RADAR_ROOT / "README.md": (
@@ -224,6 +324,7 @@ def validate_navigation(validation: Validation) -> None:
             '<a href="../README.md">OSINT Tools Radar</a> · '
             '<a href="../EMERGING.md">Emerging Projects</a> · '
             '<strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="../TIMELINE.md">Added Timeline</a> · '
             '<a href="../osint-repositories.csv">Repository Database CSV</a></p>'
         ),
     }
@@ -332,7 +433,11 @@ def validate_auxiliary_csv(
                 name = row.get("Name", "")
                 validation.check(bool(name) and name not in seen_names, f"sources.csv:{line_number}: missing or duplicate Name")
                 seen_names.add(name)
-                validation.check(row.get("Provider") in {"GitHub", "GitLab", "Codeberg", "MCP Registry"}, f"sources.csv:{line_number}: unsupported Provider")
+                validation.check(
+                    row.get("Provider")
+                    in {"GitHub", "GitLab", "Codeberg", "MCP Registry", "Telegram Channel"},
+                    f"sources.csv:{line_number}: unsupported Provider",
+                )
                 validation.check(bool(row.get("Query", "")), f"sources.csv:{line_number}: missing Query")
                 validation.check(row.get("Window") in {"created", "pushed", "updated"}, f"sources.csv:{line_number}: invalid Window")
                 validation.check(row.get("Suggested Category") in ALL_CATEGORIES, f"sources.csv:{line_number}: unknown Suggested Category")
@@ -344,9 +449,14 @@ def main() -> int:
     _, rows = validate_catalog(validation)
     validate_markdown(validation, rows)
     validate_local_links(validation)
+    validate_timeline(validation, rows)
     validate_update_badges(validation, rows)
     validate_navigation(validation)
     validate_auxiliary_csv(validation, rows)
+    validation.check(
+        (ROOT / ".github" / "assets" / "new-dot.svg").exists(),
+        "missing new-project marker asset",
+    )
     validation.check(not (ROOT / "SOCIAL.md").exists(), "SOCIAL.md must remain merged into README.md")
 
     if validation.errors:

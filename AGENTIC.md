@@ -10,7 +10,7 @@
     <img alt="Total projects: 124" src="https://img.shields.io/badge/total_projects-124-bf8700?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
+  <p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="TIMELINE.md">Added Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## About this catalogue
@@ -23,6 +23,8 @@ This file indexes open-source integrations that extend AI agents with investigat
 > [!NOTE]
 > This is a young and fast-moving ecosystem. Low or zero star counts do not disqualify a project when its repository already contains a meaningful implementation.
 
+> <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> marks projects added to the catalogue within the last 14 days.
+
 <a id="contents"></a>
 
 ## Contents
@@ -32,6 +34,7 @@ This file indexes open-source integrations that extend AI agents with investigat
 - [Reconnaissance and threat intelligence](#reconnaissance-and-threat-intelligence) <sup>30 projects</sup>
 - [Web research and source discovery](#web-research-and-source-discovery) <sup>33 projects</sup>
 - [Academic and structured research](#academic-and-structured-research) <sup>10 projects</sup>
+- [Added timeline](TIMELINE.md)
 - [Complete repository database](osint-repositories.csv) <sup>439 unique repositories</sup>
 
 <a id="compatibility-labels"></a>
@@ -55,7 +58,7 @@ This file indexes open-source integrations that extend AI agents with investigat
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
-| [Agent Reach](https://github.com/Panniantong/Agent-Reach) | CLI + skill | Multi-model | Gives agents collection workflows for public content across multiple social and developer platforms. | 2026-02-24 | 2026-07-03 | 57,123 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Agent Reach](https://github.com/Panniantong/Agent-Reach) | CLI + skill | Multi-model | Gives agents collection workflows for public content across multiple social and developer platforms. | 2026-02-24 | 2026-07-03 | 57,123 |
 | [last30days](https://github.com/mvanhorn/last30days-skill) | Skill + plugin | Multi-model | Researches recent discussion across social platforms, communities, prediction markets, and the web. | 2026-01-23 | 2026-07-16 | 52,363 |
 | [Scientific Agent Skills](https://github.com/K-Dense-AI/scientific-agent-skills) | Skill library | Multi-model | Provides reusable scientific research workflows and access patterns for public databases. | 2025-10-19 | 2026-07-15 | 31,020 |
 | [Claude Skills](https://github.com/alirezarezvani/claude-skills) | Skills + plugins | Multi-model | Includes research, security, market analysis, compliance, and evidence-oriented agent skills. | 2025-10-19 | 2026-07-14 | 22,623 |
@@ -72,12 +75,12 @@ This file indexes open-source integrations that extend AI agents with investigat
 | [OSINT Skill](https://github.com/smixs/osint-skill) | Skill | Multi-model | Runs phased people research with source grading, correlation, and report generation. | 2026-03-10 | 2026-03-10 | 82 |
 | [OnionClaw](https://github.com/JacobJandon/OnionClaw) | Skill + CLI | Tor / .onion; OpenClaw | Adds Tor search, hidden-service retrieval, crawling, and export workflows to OpenClaw. | 2026-03-14 | 2026-05-28 | 61 |
 | [MCP dnstwist](https://github.com/w0h1v/mcp-dnstwist) | MCP server | Model-agnostic (MCP) | Exposes look-alike domain discovery for phishing and impersonation investigations. | 2024-12-19 | 2025-03-03 | 51 |
-| [Huntkit](https://github.com/assafkip/huntkit) | Skills + MCP | Claude Code | Organizes cases, targets, findings, timelines, evidence hashes, and chain-of-custody records. | 2026-04-15 | 2026-07-06 | 46 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Huntkit](https://github.com/assafkip/huntkit) | Skills + MCP | Claude Code | Organizes cases, targets, findings, timelines, evidence hashes, and chain-of-custody records. | 2026-04-15 | 2026-07-06 | 46 |
 | [OSINT AI](https://github.com/dkyazzentwatwa/osint-ai) | Skill pack | Generic AI agents | Provides guided people, domain, organization, breach, and evidence-analysis workflows. | 2026-02-27 | 2026-03-07 | 44 |
 | [deep-recon](https://github.com/kvarnelis/deep-recon) | Skill | Claude Code + Obsidian | Coordinates multi-agent research and stores reconnaissance findings in Obsidian. | 2026-02-18 | 2026-02-21 | 41 |
-| [European Parliament MCP](https://github.com/Hack23/European-Parliament-MCP-Server) | MCP server | Model-agnostic (MCP) | Provides agent access to European Parliament members, committees, votes, documents, and questions. | 2026-02-16 | 2026-07-16 | 20 |
-| [Sicry](https://github.com/JacobJandon/Sicry) | Python + MCP | Tor / .onion; MCP and AI agents | Checks Tor health, rotates identity, searches onion engines, fetches known services, and exposes optional agent-assisted analysis. | 2026-03-14 | 2026-05-28 | 16 |
-| [YouTube Research MCP](https://github.com/coyaSONG/youtube-mcp-server) | MCP server | YouTube; Model-agnostic (MCP) | Exposes YouTube videos, channels, search results, comments, and transcripts through MCP. | 2025-03-31 | 2026-07-14 | 15 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [European Parliament MCP](https://github.com/Hack23/European-Parliament-MCP-Server) | MCP server | Model-agnostic (MCP) | Provides agent access to European Parliament members, committees, votes, documents, and questions. | 2026-02-16 | 2026-07-16 | 20 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Sicry](https://github.com/JacobJandon/Sicry) | Python + MCP | Tor / .onion; MCP and AI agents | Checks Tor health, rotates identity, searches onion engines, fetches known services, and exposes optional agent-assisted analysis. | 2026-03-14 | 2026-05-28 | 16 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [YouTube Research MCP](https://github.com/coyaSONG/youtube-mcp-server) | MCP server | YouTube; Model-agnostic (MCP) | Exposes YouTube videos, channels, search results, comments, and transcripts through MCP. | 2025-03-31 | 2026-07-14 | 15 |
 | [OSINT Agent Skills](https://github.com/frangelbarrera/osint-agent-skills) | Skills + MCP | Multi-model | Combines OSINT playbooks, agent instructions, report templates, and MCP tool definitions. | 2026-06-27 | 2026-07-01 | 12 |
 | [OSINT AI Agent](https://github.com/sumba101/OSINT-AI-Agent) | Agent + skills | Claude | Orchestrates Holehe, Sherlock, and GHunt for person-focused investigations. | 2026-01-11 | 2026-01-11 | 7 |
 | [Newsroom Extension](https://github.com/ehurrn/newsroom-extension) | Skill pack | Multi-model | Supports investigative journalism, FOIA work, corporate research, verification, and editorial review. | 2026-04-06 | 2026-06-22 | 6 |
@@ -104,8 +107,8 @@ This file indexes open-source integrations that extend AI agents with investigat
 | [OSINT Researcher](https://github.com/MrBridgeHQ/osint-researcher-claude) | Skill | Claude Code | Provides scoped OSINT, CTI, due diligence, and evidence-reporting procedures. | 2026-07-01 | 2026-07-06 | 0 |
 | [Chinese OSINT Skills](https://github.com/zomin/chinese-osint-skills) | Skill pack | Multi-model | Supplies Chinese-platform research methods and scripts for cross-platform identity pivots. | 2026-04-30 | 2026-04-30 | 0 |
 | [Geolocation Skill](https://github.com/zuocharles/geolocation-skill) | Skill | Agent Skills standard | Guides photo geolocation with visual clues, map queries, and source references. | 2026-03-30 | 2026-03-31 | 0 |
-| [X Archive RAG](https://github.com/mameshivaa/x-archive-rag) | RAG system | X / Twitter; Generic AI agents | Indexes exported X data for local semantic search and retrieval-augmented analysis. | 2026-05-26 | 2026-06-18 | 0 |
-| [Telegram MCP TDLib](https://github.com/tolboy/telegram-mcp-tdlib) | MCP server | Telegram; Model-agnostic (MCP) | Exposes Telegram searches, chats, messages, and public content to MCP clients through TDLib. | 2026-07-04 | 2026-07-15 | 0 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [X Archive RAG](https://github.com/mameshivaa/x-archive-rag) | RAG system | X / Twitter; Generic AI agents | Indexes exported X data for local semantic search and retrieval-augmented analysis. | 2026-05-26 | 2026-06-18 | 0 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Telegram MCP TDLib](https://github.com/tolboy/telegram-mcp-tdlib) | MCP server | Telegram; Model-agnostic (MCP) | Exposes Telegram searches, chats, messages, and public content to MCP clients through TDLib. | 2026-07-04 | 2026-07-15 | 0 |
 
 <a id="reconnaissance-and-threat-intelligence"></a>
 
@@ -140,7 +143,7 @@ This file indexes open-source integrations that extend AI agents with investigat
 | [Malware Sandbox MCP](https://github.com/mukul975/Malware-Sandbox-mcp) | MCP server | Model-agnostic (MCP) | Normalizes malware sandbox verdicts, IOCs, artifacts, and ATT&CK mappings. | 2026-06-11 | 2026-06-11 | 14 |
 | [MISP MCP](https://github.com/MISP/misp-mcp) | MCP server | Model-agnostic (MCP) | Provides read-only access to MISP threat intelligence events and attributes. | 2026-04-01 | 2026-04-05 | 8 |
 | [Offensive Recon](https://github.com/mahuttha/offensive-recon) | Plugin + skills | Claude Code | Packages multi-phase reconnaissance skills and agents around common security tools. | 2026-03-01 | 2026-03-01 | 4 |
-| [LeakIX MCP](https://github.com/LeakIX/leakix-mcp) | MCP server | Model-agnostic (MCP) | Exposes LeakIX searches for internet services, leaks, domains, and IP addresses through MCP. | 2026-01-27 | 2026-07-14 | 2 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [LeakIX MCP](https://github.com/LeakIX/leakix-mcp) | MCP server | Model-agnostic (MCP) | Exposes LeakIX searches for internet services, leaks, domains, and IP addresses through MCP. | 2026-01-27 | 2026-07-14 | 2 |
 | [OSINT MCP Gateway](https://github.com/bonetrees/osint-mcp-gateway) | MCP server | Model-agnostic (MCP) | Routes agent queries across VirusTotal, Shodan, DNS, WHOIS, RIPEstat, and OTX. | 2025-11-23 | 2026-06-10 | 0 |
 | [Bounty Recon Pro](https://github.com/synicalkid/bounty-recon-pro) | Skill | Claude Code | Runs scoped passive OSINT and active bug-bounty recon with evidence-oriented reports. | 2026-07-11 | 2026-07-11 | 0 |
 
@@ -150,14 +153,14 @@ This file indexes open-source integrations that extend AI agents with investigat
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
-| [Browser Use](https://github.com/browser-use/browser-use) | Agent framework | Multi-model | Lets AI agents navigate websites, interact with pages, and extract information. | 2024-10-31 | 2026-07-14 | 105,083 |
-| [Scrapling](https://github.com/D4Vinci/Scrapling) | Python | Agent Skills standard; Model-agnostic (MCP) | Provides adaptive web scraping, crawling, browser automation, and structured extraction. | 2024-10-13 | 2026-07-15 | 69,773 |
-| [TrendRadar](https://github.com/sansan0/TrendRadar) | Monitoring platform + MCP | Model-agnostic (MCP) | Monitors news and RSS sources, tracks trends, stores history, and exposes MCP access. | 2025-04-28 | 2026-07-08 | 60,612 |
-| [Vane](https://github.com/ItzCrazyKns/Vane) | Research agent | Multi-model | Provides a self-hosted research interface that answers questions with linked sources. | 2024-04-09 | 2026-04-11 | 35,682 |
-| [GPT Researcher](https://github.com/assafelovic/gpt-researcher) | Research agent | Multi-model | Runs multi-agent web research and produces source-grounded reports with citations. | 2023-05-12 | 2026-07-14 | 28,343 |
-| [Stagehand](https://github.com/browserbase/stagehand) | Agent SDK | Multi-model | Provides an SDK for agent-driven browser automation and page extraction. | 2024-03-24 | 2026-07-16 | 23,530 |
-| [deep-research](https://github.com/dzhng/deep-research) | Research agent | Multi-model | Runs iterative web searches, evaluates findings, and builds source-grounded research answers. | 2025-02-04 | 2026-04-11 | 19,367 |
-| [Open Deep Research](https://github.com/langchain-ai/open_deep_research) | Research agent | Multi-model | Implements a configurable deep-research agent with pluggable search and model providers. | 2024-11-20 | 2026-07-15 | 12,026 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Browser Use](https://github.com/browser-use/browser-use) | Agent framework | Multi-model | Lets AI agents navigate websites, interact with pages, and extract information. | 2024-10-31 | 2026-07-14 | 105,083 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Scrapling](https://github.com/D4Vinci/Scrapling) | Python | Agent Skills standard; Model-agnostic (MCP) | Provides adaptive web scraping, crawling, browser automation, and structured extraction. | 2024-10-13 | 2026-07-15 | 69,773 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [TrendRadar](https://github.com/sansan0/TrendRadar) | Monitoring platform + MCP | Model-agnostic (MCP) | Monitors news and RSS sources, tracks trends, stores history, and exposes MCP access. | 2025-04-28 | 2026-07-08 | 60,612 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Vane](https://github.com/ItzCrazyKns/Vane) | Research agent | Multi-model | Provides a self-hosted research interface that answers questions with linked sources. | 2024-04-09 | 2026-04-11 | 35,682 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [GPT Researcher](https://github.com/assafelovic/gpt-researcher) | Research agent | Multi-model | Runs multi-agent web research and produces source-grounded reports with citations. | 2023-05-12 | 2026-07-14 | 28,343 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Stagehand](https://github.com/browserbase/stagehand) | Agent SDK | Multi-model | Provides an SDK for agent-driven browser automation and page extraction. | 2024-03-24 | 2026-07-16 | 23,530 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [deep-research](https://github.com/dzhng/deep-research) | Research agent | Multi-model | Runs iterative web searches, evaluates findings, and builds source-grounded research answers. | 2025-02-04 | 2026-04-11 | 19,367 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Open Deep Research](https://github.com/langchain-ai/open_deep_research) | Research agent | Multi-model | Implements a configurable deep-research agent with pluggable search and model providers. | 2024-11-20 | 2026-07-15 | 12,026 |
 | [Firecrawl MCP Server](https://github.com/firecrawl/firecrawl-mcp-server) | MCP server | Model-agnostic (MCP) | Gives agents web search, crawling, scraping, extraction, and structured research tools. | 2024-12-06 | 2026-07-08 | 6,969 |
 | [Exa MCP Server](https://github.com/exa-labs/exa-mcp-server) | MCP server | Model-agnostic (MCP) | Provides semantic web search, content retrieval, and research discovery through Exa. | 2024-11-27 | 2026-07-15 | 4,729 |
 | [Deep Research](https://github.com/u14app/deep-research) | Research system + MCP | Multi-model | Runs iterative web research and synthesis with configurable models and MCP access. | 2025-02-22 | 2026-06-18 | 4,634 |
@@ -182,7 +185,7 @@ This file indexes open-source integrations that extend AI agents with investigat
 | [GiaSip Skills](https://github.com/GiaSip/giasip-skills) | Skills + plugin | Claude Code + Codex | Provides quick recon, fact-checking, research orchestration, and multi-model dispatch. | 2026-05-30 | 2026-07-15 | 11 |
 | [Web Multi Search](https://github.com/soxoj/web-multi-search-skill) | Skill + script | OpenClaw | Searches several web engines in parallel and exports deduplicated results. | 2026-02-08 | 2026-02-08 | 7 |
 | [Digital Research Skills](https://github.com/smarks26/digital-research-skills) | Research skill system | Multi-model | Plans evidence-driven research waves for OSINT, due diligence, trends, and long-form analysis. | 2026-05-29 | 2026-05-16 | 2 |
-| [Internet Archive MCP](https://github.com/cyanheads/internet-archive-mcp-server) | MCP server | Model-agnostic (MCP) | Provides agent access to Internet Archive search, metadata, files, and preserved resources. | 2026-06-05 | 2026-07-03 | 1 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Internet Archive MCP](https://github.com/cyanheads/internet-archive-mcp-server) | MCP server | Model-agnostic (MCP) | Provides agent access to Internet Archive search, metadata, files, and preserved resources. | 2026-06-05 | 2026-07-03 | 1 |
 
 <a id="academic-and-structured-research"></a>
 
@@ -190,12 +193,12 @@ This file indexes open-source integrations that extend AI agents with investigat
 
 | Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |
 |:---|:---:|:---:|:---|:---:|:---:|---:|
-| [Agentset](https://github.com/agentset-ai/agentset) | Research system + MCP | Model-agnostic (MCP) | Provides document ingestion, agentic search, ranking, citations, RAG, and MCP access. | 2025-03-10 | 2026-07-04 | 2,031 |
-| [PDF Reader MCP](https://github.com/SylphxAI/pdf-reader-mcp) | MCP server + CLI | Model-agnostic (MCP) | Analyzes PDFs through MCP while retaining page references, visual crops, and OCR provenance. | 2025-04-04 | 2026-07-16 | 827 |
-| [Docling MCP](https://github.com/docling-project/docling-mcp) | MCP server | Model-agnostic (MCP) | Exposes document conversion and structured extraction from files and URLs through MCP. | 2025-03-14 | 2026-07-16 | 686 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Agentset](https://github.com/agentset-ai/agentset) | Research system + MCP | Model-agnostic (MCP) | Provides document ingestion, agentic search, ranking, citations, RAG, and MCP access. | 2025-03-10 | 2026-07-04 | 2,031 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [PDF Reader MCP](https://github.com/SylphxAI/pdf-reader-mcp) | MCP server + CLI | Model-agnostic (MCP) | Analyzes PDFs through MCP while retaining page references, visual crops, and OCR provenance. | 2025-04-04 | 2026-07-16 | 827 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Docling MCP](https://github.com/docling-project/docling-mcp) | MCP server | Model-agnostic (MCP) | Exposes document conversion and structured extraction from files and URLs through MCP. | 2025-03-14 | 2026-07-16 | 686 |
 | [Simple PubMed MCP](https://github.com/andybrandt/mcp-simple-pubmed) | MCP server | Model-agnostic (MCP) | Searches PubMed and retrieves biomedical article metadata and abstracts. | 2024-12-11 | 2026-03-19 | 169 |
 | [mcp.science](https://github.com/pathintegral-institute/mcp.science) | MCP server | Model-agnostic (MCP) | Connects agents to scientific literature search and research data services. | 2025-03-27 | 2025-09-02 | 145 |
-| [Data Commons Agent Toolkit](https://github.com/datacommonsorg/agent-toolkit) | MCP toolkit | Model-agnostic (MCP) | Connects agents and MCP clients to the public Data Commons knowledge graph. | 2025-06-26 | 2026-07-15 | 137 |
+| <img src=".github/assets/new-dot.svg" width="6" height="6" alt=""> [Data Commons Agent Toolkit](https://github.com/datacommonsorg/agent-toolkit) | MCP toolkit | Model-agnostic (MCP) | Connects agents and MCP clients to the public Data Commons knowledge graph. | 2025-06-26 | 2026-07-15 | 137 |
 | [Academia MCP](https://github.com/IlyaGusev/academia_mcp) | MCP server | Model-agnostic (MCP) | Searches academic sources and retrieves papers for agent-assisted literature research. | 2025-01-24 | 2026-01-24 | 90 |
 | [ZotPilot](https://github.com/xunhe730/ZotPilot) | Skill + MCP | Model-agnostic (MCP) | Connects Zotero collections to source-grounded research and agent workflows. | 2026-03-16 | 2026-06-16 | 67 |
 | [OpenAlex Research MCP](https://github.com/oksure/openalex-research-mcp) | MCP server | Model-agnostic (MCP) | Queries OpenAlex works, authors, institutions, concepts, and citation relationships. | 2025-10-05 | 2026-06-22 | 36 |

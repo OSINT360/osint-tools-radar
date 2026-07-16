@@ -269,6 +269,7 @@ def main() -> int:
             "Type": args.project_type or candidate["Language"] or "Unknown",
             "Compatibility": args.compatibility,
             "Description": args.description or candidate["Description"],
+            "Added": date.today().isoformat(),
             "Created": candidate["Created"],
             "Last Update": candidate["Last Update"],
             "Stars": candidate["Stars"] or "0",
