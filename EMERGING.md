@@ -7,7 +7,7 @@
     <a href="#projects"><img alt="Emerging projects: 87" src="https://img.shields.io/badge/emerging_projects-87-bf8700?style=flat-square"></a>
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><a href="EMERGING.md">Emerging Projects</a> · <a href="README.md">OSINT Tools Radar</a> · <strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="TIMELINE.md">Added Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
+  <p><a href="EMERGING.md">Emerging Projects</a> · <a href="README.md">OSINT Tools Radar</a> · <strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="TIMELINE.md">Catalogue Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## Contents
@@ -16,7 +16,7 @@
 - [Emerging project table](#projects)
 - [Main OSINT catalogue](README.md)
 - [Agentic AI OSINT](AGENTIC.md)
-- [Added timeline](TIMELINE.md)
+- [Catalogue timeline](TIMELINE.md)
 - [Complete repository database](osint-repositories.csv) <sup>439 unique repositories</sup>
 
 <a id="selection-criteria"></a>

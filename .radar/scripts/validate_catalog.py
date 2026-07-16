@@ -295,25 +295,25 @@ def validate_navigation(validation: Validation) -> None:
             '<p><a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
             '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
-            '<a href="TIMELINE.md">Added Timeline</a> · '
+            '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "EMERGING.md": (
             '<p><a href="EMERGING.md">Emerging Projects</a> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
-            '<a href="TIMELINE.md">Added Timeline</a> · '
+            '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "AGENTIC.md": (
             '<p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
-            '<a href="TIMELINE.md">Added Timeline</a> · '
+            '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "TIMELINE.md": (
-            '<p><strong><a href="TIMELINE.md">Added Timeline</a></strong> · '
+            '<p><strong><a href="TIMELINE.md">Catalogue Timeline</a></strong> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
             '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
@@ -324,7 +324,7 @@ def validate_navigation(validation: Validation) -> None:
             '<a href="../README.md">OSINT Tools Radar</a> · '
             '<a href="../EMERGING.md">Emerging Projects</a> · '
             '<strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · '
-            '<a href="../TIMELINE.md">Added Timeline</a> · '
+            '<a href="../TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="../osint-repositories.csv">Repository Database CSV</a></p>'
         ),
     }

@@ -10,7 +10,7 @@
     <img alt="Total projects: 124" src="https://img.shields.io/badge/total_projects-124-bf8700?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="TIMELINE.md">Added Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
+  <p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="TIMELINE.md">Catalogue Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## About this catalogue
@@ -34,7 +34,7 @@ This file indexes open-source integrations that extend AI agents with investigat
 - [Reconnaissance and threat intelligence](#reconnaissance-and-threat-intelligence) <sup>30 projects</sup>
 - [Web research and source discovery](#web-research-and-source-discovery) <sup>33 projects</sup>
 - [Academic and structured research](#academic-and-structured-research) <sup>10 projects</sup>
-- [Added timeline](TIMELINE.md)
+- [Catalogue timeline](TIMELINE.md)
 - [Complete repository database](osint-repositories.csv) <sup>439 unique repositories</sup>
 
 <a id="compatibility-labels"></a>

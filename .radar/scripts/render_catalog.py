@@ -276,7 +276,7 @@ def render_timeline(
         ),
         "  </p>",
         (
-            '  <p><strong><a href="TIMELINE.md">Added Timeline</a></strong> · '
+            '  <p><strong><a href="TIMELINE.md">Catalogue Timeline</a></strong> · '
             '<a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
             '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
@@ -286,7 +286,7 @@ def render_timeline(
         "",
         (
             "> Projects are grouped by the date stored in the canonical `Added` "
-            "column. Newest additions appear first."
+            "column. Newest catalogue entries appear first."
         ),
         "",
     ]
@@ -313,7 +313,7 @@ def render_timeline(
         [
             "<details>",
             (
-                "<summary><strong>Legacy entries without an Added date</strong> "
+                "<summary><strong>Legacy entries without a catalogue date</strong> "
                 f"<sup>{legacy_count} {count_label(legacy_count)}</sup></summary>"
             ),
             "",

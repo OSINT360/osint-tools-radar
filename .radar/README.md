@@ -10,7 +10,7 @@
     <img alt="Third-party code execution: disabled" src="https://img.shields.io/badge/third--party_code-not_executed-1f883d?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../TIMELINE.md">Added Timeline</a> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
+  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../TIMELINE.md">Catalogue Timeline</a> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## Operating model

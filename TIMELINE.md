@@ -8,10 +8,10 @@
     <img alt="Catalogue projects: 439" src="https://img.shields.io/badge/catalogue_projects-439-8250df?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><strong><a href="TIMELINE.md">Added Timeline</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
+  <p><strong><a href="TIMELINE.md">Catalogue Timeline</a></strong> · <a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <a href="AGENTIC.md">Agentic AI OSINT</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
-> Projects are grouped by the date stored in the canonical `Added` column. Newest additions appear first.
+> Projects are grouped by the date stored in the canonical `Added` column. Newest catalogue entries appear first.
 
 ## 2026-07-16 <sup>91 projects</sup>
 
@@ -170,7 +170,7 @@
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 <details>
-<summary><strong>Legacy entries without an Added date</strong> <sup>297 projects</sup></summary>
+<summary><strong>Legacy entries without a catalogue date</strong> <sup>297 projects</sup></summary>
 
 These projects predate reliable per-entry addition tracking. They are listed alphabetically without an invented date.
 

@@ -10,7 +10,7 @@
     <img alt="Catalogue entries: 484" src="https://img.shields.io/badge/catalogue_entries-484-8250df?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="TIMELINE.md">Added Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
+  <p><a href="README.md">OSINT Tools Radar</a> · <a href="EMERGING.md">Emerging Projects</a> · <strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="TIMELINE.md">Catalogue Timeline</a> · <a href="osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## About this catalogue
@@ -61,7 +61,7 @@ OSINT Tools Radar is a repository-first catalogue of open-source OSINT software.
   - [Discord](#discord) <sup>4 projects</sup>
 - [Emerging projects](EMERGING.md) <sup>87 projects</sup>
 - [Agentic AI OSINT](AGENTIC.md) <sup>124 projects</sup>
-- [Added timeline](TIMELINE.md)
+- [Catalogue timeline](TIMELINE.md)
 - [Complete repository database](osint-repositories.csv) <sup>439 unique repositories</sup>
 
 ---
