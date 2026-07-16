@@ -32,7 +32,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python .radar/scripts/refresh_metadata.py --write --snapshot --delay 0.1
+          python .radar/scripts/refresh_metadata.py \
+            --write \
+            --snapshot \
+            --drop-archived \
+            --drop-stale-before 2020-01-01 \
+            --delay 0.1
           python .radar/scripts/render_catalog.py --write
           python .radar/scripts/validate_catalog.py
           python .radar/scripts/market_report.py --output "$RUNNER_TEMP/market-watch.md"
@@ -48,7 +53,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "+refs/heads/$branch:refs/remotes/origin/$branch" || true
           git checkout -B "$branch"
-          git add osint-repositories.csv .radar/data/snapshots.csv README.md EMERGING.md AGENTIC.md
+          git add osint-repositories.csv .radar/README.md .radar/data/candidates.csv .radar/data/snapshots.csv README.md EMERGING.md AGENTIC.md
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
