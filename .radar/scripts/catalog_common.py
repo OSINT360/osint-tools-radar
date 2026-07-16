@@ -55,7 +55,7 @@ MONITOR_COLUMNS = [
 ALL_COLUMNS = PUBLIC_COLUMNS + MONITOR_COLUMNS
 
 TABLE_HEADER = (
-    "| Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |"
+    "| Project | Type | Compatibility | Description | Created | Last Update | Stars |"
 )
 TABLE_ALIGNMENT = "|:---|:---:|:---:|:---|:---:|:---:|---:|"
 
@@ -191,7 +191,7 @@ def format_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
         f"| {markdown_text(row['Compatibility']) or '-'} "
         f"| {markdown_text(row['Description'])} "
         f"| {row['Created']} | {row['Last Update']} "
-        f"| {stars_as_int(row['Stars']):,} |"
+        f"| {stars_as_int(row['Stars']):,} ⭐ |"
     )
 
 

@@ -26,8 +26,11 @@ from catalog_common import (
     verified_date,
 )
 
-TIMELINE_HEADER = "| Project | Target | Categories | Description | Stars ⭐ |"
+TIMELINE_HEADER = "| Project | Target | Categories | Description | Stars |"
 TIMELINE_ALIGNMENT = "|:---|:---|:---|:---|---:|"
+LEGACY_TABLE_HEADER = (
+    "| Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |"
+)
 
 
 def count_label(count: int) -> str:
@@ -58,12 +61,13 @@ def replace_section_table(text: str, label: str, rendered_rows: list[str]) -> st
         (
             index
             for index in range(heading_index + 1, min(len(lines), heading_index + 12))
-            if lines[index] == TABLE_HEADER
+            if lines[index] in {TABLE_HEADER, LEGACY_TABLE_HEADER}
         ),
         None,
     )
     if header_index is None:
         raise ValueError(f"Cannot find table below section: {label}")
+    lines[header_index] = TABLE_HEADER
 
     first_row = header_index + 2
     last_row = first_row
@@ -230,7 +234,7 @@ def timeline_row(row: dict[str, str]) -> str:
         f"| {targets} "
         f"| {categories} "
         f"| {markdown_text(row['Description'])} "
-        f"| {stars_as_int(row['Stars']):,} |"
+        f"| {stars_as_int(row['Stars']):,} ⭐ |"
     )
 
 
