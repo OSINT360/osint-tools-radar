@@ -7,6 +7,10 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 .coverage
+.env
+.env.*
+!.env.example
+*.log
 
 # Local automation reports
 discovery-report.md
