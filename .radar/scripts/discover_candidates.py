@@ -31,7 +31,7 @@ CANDIDATE_PATH = DATA_ROOT / "candidates.csv"
 SOURCE_PATH = DATA_ROOT / "sources.csv"
 CANDIDATE_FIELDS = [
     "Project", "Repository", "Hosting", "Discovered", "Discovery Source", "Query",
-    "Suggested Target", "Suggested Category", "Description", "Created", "Last Update",
+    "Suggested Target Input", "Suggested Category", "Suggested Views", "Description", "Created", "Last Update",
     "Stars", "Language", "License", "Archived", "Fork", "Score", "Confidence",
     "Evidence", "Review Status", "Notes",
 ]
@@ -481,10 +481,11 @@ def report_text(new_rows: list[dict[str, str]], errors: list[str], since: str) -
         "",
     ]
     if new_rows:
-        lines.extend(["| Project | Source | Suggested category | Score | Repository |", "|---|---|---|---:|---|"])
+        lines.extend(["| Project | Source | Suggested category | Suggested views | Score | Repository |", "|---|---|---|---|---:|---|"])
         for row in sorted(new_rows, key=lambda item: (-int(item["Score"]), item["Project"].casefold())):
             lines.append(
                 f"| {row['Project']} | {row['Discovery Source']} | {row['Suggested Category']} "
+                f"| {row['Suggested Views'] or '-'} "
                 f"| {row['Score']} | [Review]({row['Repository']}) |"
             )
         lines.append("")
@@ -564,8 +565,10 @@ def main() -> int:
                 "Project": clean_text(item.get("name")) or url.rstrip("/").rsplit("/", 1)[-1],
                 "Repository": url, "Hosting": clean_text(item.get("hosting")),
                 "Discovered": date.today().isoformat(), "Discovery Source": source["Name"],
-                "Query": source["Query"], "Suggested Target": source["Suggested Target"],
+                "Query": source["Query"],
+                "Suggested Target Input": source["Suggested Target Input"],
                 "Suggested Category": source["Suggested Category"],
+                "Suggested Views": source["Suggested Views"],
                 "Description": clean_text(item.get("description")), "Created": iso_date(item.get("created")),
                 "Last Update": iso_date(item.get("updated")), "Stars": str(item.get("stars") or 0),
                 "Language": clean_text(item.get("language")), "License": clean_text(item.get("license")),

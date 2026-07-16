@@ -7,102 +7,51 @@ import argparse
 import difflib
 import re
 import sys
+from html import escape
 from pathlib import Path
 
 from catalog_common import (
+    AGENTIC_TABLE_ALIGNMENT,
+    AGENTIC_TABLE_HEADER,
     AGENTIC_SECTIONS,
-    NEW_PROJECT_MARKER,
+    NEW_PROJECT_LEGEND,
     README_SECTIONS,
+    README_TABLE_ALIGNMENT,
+    README_TABLE_HEADER,
     ROOT,
+    TABLE_ALIGNMENT,
     TABLE_HEADER,
+    format_agentic_markdown_row,
     format_markdown_row,
+    format_readme_markdown_row,
     load_catalog,
-    markdown_text,
     recent_repository_keys,
     repository_key,
     rows_for_category,
+    rows_for_source,
     split_values,
     stars_as_int,
     verified_date,
 )
 
-TIMELINE_HEADER = "| Project | Target | Categories | Description | Stars |"
-TIMELINE_ALIGNMENT = "|:---|:---|:---|:---|---:|"
-LEGACY_TABLE_HEADER = (
-    "| Project | Type | Compatibility | Description | Created | Last Update | Stars ⭐ |"
-)
+CATEGORY_DETAILS = {
+    "Identity": ("👤", "Tools centered on people, names, contact identifiers, and identity resolution."),
+    "Social Media": ("💬", "Tools for discovering and analyzing public accounts and content on social platforms."),
+    "Code Repositories": ("💻", "Tools that investigate public source-code repositories, accounts, and repository metadata."),
+    "Infrastructure": ("🌐", "Tools for domains, IP addresses, networks, ASNs, and related internet infrastructure."),
+    "Web": ("🔗", "Tools that collect, search, analyze, crawl, or preserve public web content."),
+    "Dark Web": ("🧅", "Tools for discovering, collecting, and analyzing onion services and dark-web content."),
+    "Threat Intelligence": ("🛡️", "Tools for threat data, indicators, file hashes, vulnerabilities, and malware analysis."),
+    "Documents & Records": ("📄", "Tools for documents, files, datasets, public records, extraction, and structured review."),
+    "Media": ("🖼️", "Tools for image, video, audio, metadata, verification, and media forensics."),
+    "Geolocation": ("📍", "Tools for locations, coordinates, maps, wireless identifiers, aircraft, and satellite data."),
+    "Cryptocurrency": ("₿", "Tools for cryptocurrency addresses, blockchain activity, and transaction analysis."),
+    "Investigation": ("🔎", "Cross-cutting investigation, case-management, correlation, and research workspaces."),
+}
 
 
 def count_label(count: int) -> str:
     return "project" if count == 1 else "projects"
-
-
-def heading_matches(line: str, label: str) -> bool:
-    if not line.startswith("## "):
-        return False
-    title = re.sub(r"\s*<sup>.*?</sup>\s*$", "", line[3:]).strip()
-    return title == label or title.endswith(f" {label}")
-
-
-def replace_section_table(text: str, label: str, rendered_rows: list[str]) -> str:
-    lines = text.splitlines()
-    heading_index = next(
-        (index for index, line in enumerate(lines) if heading_matches(line, label)),
-        None,
-    )
-    if heading_index is None:
-        raise ValueError(f"Cannot find Markdown section: {label}")
-
-    count = len(rendered_rows)
-    clean_heading = re.sub(r"\s*<sup>.*?</sup>\s*$", "", lines[heading_index]).rstrip()
-    lines[heading_index] = f"{clean_heading} <sup>{count} {count_label(count)}</sup>"
-
-    header_index = next(
-        (
-            index
-            for index in range(heading_index + 1, min(len(lines), heading_index + 12))
-            if lines[index] in {TABLE_HEADER, LEGACY_TABLE_HEADER}
-        ),
-        None,
-    )
-    if header_index is None:
-        raise ValueError(f"Cannot find table below section: {label}")
-    lines[header_index] = TABLE_HEADER
-
-    first_row = header_index + 2
-    last_row = first_row
-    marker_pattern = (
-        r'(?:<img src="\.github/assets/new-dot\.svg"[^>]*>'
-        r"|<sup>🟢</sup>|🟢) "
-    )
-    while last_row < len(lines) and re.match(
-        rf"^\| (?:{marker_pattern})?\[",
-        lines[last_row],
-    ):
-        last_row += 1
-    lines[first_row:last_row] = rendered_rows
-    return "\n".join(lines) + "\n"
-
-
-def replace_toc_count(text: str, label: str, count: int) -> str:
-    anchor = re.sub(r"[^a-z0-9 -]", "", label.casefold()).replace(" ", "-")
-    pattern = re.compile(
-        rf"(\[{re.escape(label)}\]\(#{re.escape(anchor)}\)\s*<sup>)\d+\s+projects?(</sup>)"
-    )
-    return pattern.sub(rf"\g<1>{count} {count_label(count)}\2", text)
-
-
-def replace_number_badge(text: str, alt_label: str, slug: str, value: int) -> str:
-    text = re.sub(
-        rf'alt="{re.escape(alt_label)}: \d+"',
-        f'alt="{alt_label}: {value}"',
-        text,
-    )
-    return re.sub(
-        rf"(badge/{re.escape(slug)}-)\d+(-)",
-        rf"\g<1>{value}\2",
-        text,
-    )
 
 
 def replace_update_date(text: str, date: str) -> str:
@@ -117,23 +66,74 @@ def replace_update_date(text: str, date: str) -> str:
     )
 
 
-def replace_discord_empty_state(text: str, count: int) -> str:
-    note = "No implementation-bearing public repository from the reviewed sources passed the inclusion criteria."
-    pattern = re.compile(
-        rf"(## Discord <sup>\d+\s+projects?</sup>\n\n)(?:{re.escape(note)}\n\n)?(?={re.escape(TABLE_HEADER)})"
-    )
-    replacement = rf"\g<1>{note}\n\n" if count == 0 else r"\g<1>"
-    return pattern.sub(replacement, text)
-
-
 def rendered_rows(
     rows: list[dict[str, str]],
     recent_keys: set[str],
+    agentic: bool = False,
+    readme: bool = False,
 ) -> list[str]:
+    if agentic:
+        formatter = format_agentic_markdown_row
+    elif readme:
+        formatter = format_readme_markdown_row
+    else:
+        formatter = format_markdown_row
     return [
-        format_markdown_row(row, repository_key(row["Repository"]) in recent_keys)
+        formatter(row, repository_key(row["Repository"]) in recent_keys)
         for row in rows
     ]
+
+
+def anchor_for(label: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", label.casefold()).strip("-")
+
+
+def badge(label: str, slug: str, value: int, color: str, href: str = "") -> str:
+    image = (
+        f'<img alt="{label}: {value}" '
+        f'src="https://img.shields.io/badge/{slug}-{value}-{color}?style=flat-square">'
+    )
+    return f'<a href="{href}">{image}</a>' if href else image
+
+
+def navigation(active: str) -> str:
+    items = [
+        ("OSINT Tools Radar", "README.md"),
+        ("Emerging Projects", "EMERGING.md"),
+        ("Agentic AI OSINT", "AGENTIC.md"),
+        ("Catalogue Timeline", "TIMELINE.md"),
+        ("Repository Database CSV", "osint-repositories.csv"),
+    ]
+    links = []
+    for label, href in items:
+        link = f'<a href="{href}">{label}</a>'
+        links.append(f"<strong>{link}</strong>" if label == active else link)
+    return f"  <p>{' · '.join(links)}</p>"
+
+
+def append_table(
+    lines: list[str],
+    selected: list[dict[str, str]],
+    recent_keys: set[str],
+    agentic: bool = False,
+    readme: bool = False,
+) -> None:
+    if agentic:
+        header = AGENTIC_TABLE_HEADER
+        alignment = AGENTIC_TABLE_ALIGNMENT
+    elif readme:
+        header = README_TABLE_HEADER
+        alignment = README_TABLE_ALIGNMENT
+    else:
+        header = TABLE_HEADER
+        alignment = TABLE_ALIGNMENT
+    lines.extend(
+        [
+            header,
+            alignment,
+            *rendered_rows(selected, recent_keys, agentic=agentic, readme=readme),
+        ]
+    )
 
 
 def render_readme(
@@ -142,39 +142,102 @@ def render_readme(
     date: str,
     recent_keys: set[str],
 ) -> str:
-    counts: dict[str, int] = {}
+    del text
+    counts = {label: len(rows_for_category(rows, category)) for label, category in README_SECTIONS}
+    emerging_count = len(rows_for_source(rows, "EMERGING.md"))
+    agentic_count = len(rows_for_source(rows, "AGENTIC.md"))
+    badge_date = date.replace("-", "--")
+    lines = [
+        '<a id="top"></a>',
+        "",
+        '<div align="center">',
+        "  <h1>OSINT Tools Radar</h1>",
+        "  <p>A catalogue of open-source OSINT tools organized into 12 clear categories and concrete input types.</p>",
+        "  <p>",
+        f'    {badge("Emerging projects", "emerging", emerging_count, "bf8700", "EMERGING.md")}',
+        f'    {badge("Social Media projects", "social_media", counts["Social Media"], "8250df", "#social-media")}',
+        f'    {badge("Agentic integrations", "agentic_integrations", agentic_count, "d1242f", "AGENTIC.md")}',
+        f'    {badge("Catalogue projects", "catalogue_projects", len(rows), "8250df")}',
+        (
+            f'    <img alt="Last update: {date}" src="https://img.shields.io/badge/'
+            f'last_update-{badge_date}-1f883d?style=flat-square">'
+        ),
+        "  </p>",
+        navigation("OSINT Tools Radar"),
+        "</div>",
+        "",
+        "## About this catalogue",
+        "",
+        (
+            "OSINT Tools Radar is a repository-first catalogue of open-source investigative software. "
+            "Every record represents a public source-code repository containing an identifiable tool "
+            "or integration with a practical OSINT use case."
+        ),
+        "",
+        (
+            "Each project has exactly one value in `Categories`. `Target Input` contains only concrete "
+            "data accepted or investigated by the tool, such as `Username`, `Domain`, `IP Address`, "
+            "`URL`, `File Hash`, or `Onion Service`. A project may have multiple target inputs."
+        ),
+        "",
+        (
+            "`Emerging Projects` and `Agentic AI OSINT` are additional generated views selected through "
+            "`Source Files`; they are not category values."
+        ),
+        "",
+        "| File | What it contains |",
+        "|---|---|",
+        "| [`README.md`](README.md) | Main catalogue with one section for each of the 12 categories. |",
+        "| [`EMERGING.md`](EMERGING.md) | Early-stage tools and projects worth monitoring. |",
+        "| [`AGENTIC.md`](AGENTIC.md) | Skills, plugins, MCP servers, and AI-agent integrations grouped by main category. |",
+        "| [`TIMELINE.md`](TIMELINE.md) | Visual chronology of catalogue additions with descriptions, categories, and current star counts. |",
+        "| [`osint-repositories.csv`](osint-repositories.csv) | Canonical repository database in CSV format with all accepted records and current metadata. |",
+        "",
+        "> [!IMPORTANT]",
+        (
+            "> Only implementation-bearing repositories with publicly accessible source code are included. "
+            "Closed-source services, link collections, courses, articles, prompt-only lists, datasets without "
+            "an implemented tool, and repository stubs are excluded."
+        ),
+        "",
+        f"> {NEW_PROJECT_LEGEND}",
+        "",
+        '<a id="table-of-contents"></a>',
+        "",
+        "## Table of contents",
+        "",
+    ]
+    for label, _ in README_SECTIONS:
+        lines.append(
+            f"- [{label}](#{anchor_for(label)}) <sup>{counts[label]} {count_label(counts[label])}</sup>"
+        )
+    lines.extend(
+        [
+            f"- [Emerging projects](EMERGING.md) <sup>{emerging_count} {count_label(emerging_count)}</sup>",
+            f"- [Agentic AI OSINT](AGENTIC.md) <sup>{agentic_count} {count_label(agentic_count)}</sup>",
+            "- [Catalogue timeline](TIMELINE.md)",
+            f"- [Complete repository database (CSV)](osint-repositories.csv) <sup>{len(rows)} unique repositories</sup>",
+            "",
+            "---",
+            "",
+        ]
+    )
     for label, category in README_SECTIONS:
         selected = rows_for_category(rows, category)
-        counts[label] = len(selected)
-        text = replace_section_table(text, label, rendered_rows(selected, recent_keys))
-        text = replace_toc_count(text, label, len(selected))
-
-    readme_count = sum(counts.values())
-    social_labels = {
-        label for label, category in README_SECTIONS if category.startswith("Social platforms / ")
-    }
-    social_count = sum(count for label, count in counts.items() if label in social_labels)
-    emerging_count = len(rows_for_category(rows, "Emerging"))
-    agentic_count = sum(len(rows_for_category(rows, category)) for _, category in AGENTIC_SECTIONS)
-    total_entries = readme_count + emerging_count + agentic_count
-
-    text = replace_number_badge(text, "Emerging projects", "emerging", emerging_count)
-    text = replace_number_badge(text, "Social platform entries", "social_platforms", social_count)
-    text = replace_number_badge(text, "Agentic integrations", "agentic_integrations", agentic_count)
-    text = replace_number_badge(text, "Catalogue entries", "catalogue_entries", total_entries)
-    text = re.sub(
-        r"(\[Emerging projects\]\(EMERGING\.md\) <sup>)\d+\s+projects?(</sup>)",
-        rf"\g<1>{emerging_count} {count_label(emerging_count)}\2",
-        text,
-    )
-    text = re.sub(
-        r"(\[Agentic AI OSINT\]\(AGENTIC\.md\) <sup>)\d+\s+projects?(</sup>)",
-        rf"\g<1>{agentic_count} {count_label(agentic_count)}\2",
-        text,
-    )
-    text = replace_discord_empty_state(text, counts["Discord"])
-    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_update_date(text, date)
+        icon, description = CATEGORY_DETAILS[label]
+        lines.extend(
+            [
+                f'<a id="{anchor_for(label)}"></a>',
+                "",
+                f"## {icon} {label} <sup>{len(selected)} {count_label(len(selected))}</sup>",
+                "",
+                description,
+                "",
+            ]
+        )
+        append_table(lines, selected, recent_keys, readme=True)
+        lines.extend(["", '<p align="right"><a href="#table-of-contents">Back to contents ↑</a></p>', ""])
+    return "\n".join(lines)
 
 
 def render_emerging(
@@ -183,11 +246,56 @@ def render_emerging(
     date: str,
     recent_keys: set[str],
 ) -> str:
-    selected = rows_for_category(rows, "Emerging")
-    text = replace_section_table(text, "Projects", rendered_rows(selected, recent_keys))
-    text = replace_number_badge(text, "Emerging projects", "emerging_projects", len(selected))
-    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_update_date(text, date)
+    del text
+    selected = rows_for_source(rows, "EMERGING.md")
+    badge_date = date.replace("-", "--")
+    lines = [
+        '<a id="top"></a>',
+        "",
+        '<div align="center">',
+        "  <h1>Emerging OSINT Projects</h1>",
+        "  <p>A watchlist of early-stage open-source OSINT tools and supporting technologies.</p>",
+        "  <p>",
+        f'    {badge("Emerging projects", "emerging_projects", len(selected), "bf8700", "#projects")}',
+        (
+            f'    <img alt="Last update: {date}" src="https://img.shields.io/badge/'
+            f'last_update-{badge_date}-1f883d?style=flat-square">'
+        ),
+        "  </p>",
+        navigation("Emerging Projects"),
+        "</div>",
+        "",
+        "## Selection criteria",
+        "",
+        (
+            "Projects listed here have public source code, an identifiable implementation, and a practical "
+            "OSINT or investigative use case. Early development, limited adoption, and low star counts do not "
+            "automatically exclude a project."
+        ),
+        "",
+        (
+            "Membership in this view is stored in `Source Files`. Every project retains one of the 12 main "
+            "`Categories` values and its concrete `Target Input` values in the canonical CSV."
+        ),
+        "",
+        f"> {NEW_PROJECT_LEGEND}",
+        "",
+        '<a id="projects"></a>',
+        "",
+        f"## Projects <sup>{len(selected)} {count_label(len(selected))}</sup>",
+        "",
+    ]
+    append_table(lines, selected, recent_keys)
+    lines.extend(
+        [
+            "",
+            '<p align="right"><a href="#top">Back to top ↑</a></p>',
+            "",
+            f"[Complete repository database (CSV)](osint-repositories.csv) <sup>{len(rows)} unique repositories</sup>",
+            "",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def render_agentic(
@@ -196,21 +304,92 @@ def render_agentic(
     date: str,
     recent_keys: set[str],
 ) -> str:
-    counts: dict[str, int] = {}
-    for label, category in AGENTIC_SECTIONS:
-        selected = rows_for_category(rows, category)
-        counts[label] = len(selected)
-        text = replace_section_table(text, label, rendered_rows(selected, recent_keys))
-        text = replace_toc_count(text, label, len(selected))
-
-    research_count = counts["Web research and source discovery"] + counts["Academic and structured research"]
-    total = sum(counts.values())
-    text = replace_number_badge(text, "OSINT integrations", "OSINT_integrations", counts["OSINT investigation and intelligence"])
-    text = replace_number_badge(text, "Recon and CTI", "recon_and_CTI", counts["Reconnaissance and threat intelligence"])
-    text = replace_number_badge(text, "Research integrations", "research_integrations", research_count)
-    text = replace_number_badge(text, "Total projects", "total_projects", total)
-    text = re.sub(r"(Complete repository database\]\(osint-repositories\.csv\) <sup>)\d+", rf"\g<1>{len(rows)}", text)
-    return replace_update_date(text, date)
+    del text
+    selected_all = rows_for_source(rows, "AGENTIC.md")
+    active_sections = [
+        (label, category, rows_for_source(rows, "AGENTIC.md", category))
+        for label, category in AGENTIC_SECTIONS
+    ]
+    active_sections = [item for item in active_sections if item[2]]
+    mcp_count = sum("MCP" in row.get("Type", "") for row in selected_all)
+    skill_count = sum("Skill" in row.get("Type", "") for row in selected_all)
+    badge_date = date.replace("-", "--")
+    lines = [
+        '<a id="top"></a>',
+        "",
+        '<div align="center">',
+        "  <h1>Agentic AI OSINT</h1>",
+        "  <p>Open-source skills, plugins, MCP servers, and AI-agent integrations for investigative work.</p>",
+        "  <p>",
+        f'    {badge("Total projects", "total_projects", len(selected_all), "bf8700")}',
+        f'    {badge("MCP integrations", "MCP_integrations", mcp_count, "0969da")}',
+        f'    {badge("Skill integrations", "skill_integrations", skill_count, "8250df")}',
+        (
+            f'    <img alt="Last update: {date}" src="https://img.shields.io/badge/'
+            f'last_update-{badge_date}-1f883d?style=flat-square">'
+        ),
+        "  </p>",
+        navigation("Agentic AI OSINT"),
+        "</div>",
+        "",
+        "## About this catalogue",
+        "",
+        (
+            "This view contains implementation-bearing repositories that expose investigative workflows or "
+            "data access to AI agents. Membership is stored in `Source Files`, while the same single main "
+            "category used by the primary catalogue determines the sections below."
+        ),
+        "",
+        (
+            "`Target Input` describes the concrete data accepted by a tool. `AI Agent` records the documented "
+            "agent runtime or integration surface, such as Claude Code, an Agent Skills-compatible client, or "
+            "any MCP-compatible agent."
+        ),
+        "",
+        "> [!IMPORTANT]",
+        (
+            "> Only public source-code implementations are included. Prompt lists, link collections, closed "
+            "services, courses, articles, and repository stubs are excluded."
+        ),
+        "",
+        "> [!NOTE]",
+        "> Low or zero star counts do not disqualify a young project with a meaningful implementation.",
+        "",
+        f"> {NEW_PROJECT_LEGEND}",
+        "",
+        '<a id="contents"></a>',
+        "",
+        "## Contents",
+        "",
+    ]
+    for label, _, selected in active_sections:
+        lines.append(
+            f"- [{label}](#{anchor_for(label)}) <sup>{len(selected)} {count_label(len(selected))}</sup>"
+        )
+    lines.extend(
+        [
+            "- [Catalogue timeline](TIMELINE.md)",
+            f"- [Complete repository database (CSV)](osint-repositories.csv) <sup>{len(rows)} unique repositories</sup>",
+            "",
+            "---",
+            "",
+        ]
+    )
+    for label, _, selected in active_sections:
+        icon, description = CATEGORY_DETAILS[label]
+        lines.extend(
+            [
+                f'<a id="{anchor_for(label)}"></a>',
+                "",
+                f"## {icon} {label} <sup>{len(selected)} {count_label(len(selected))}</sup>",
+                "",
+                description,
+                "",
+            ]
+        )
+        append_table(lines, selected, recent_keys, agentic=True)
+        lines.extend(["", '<p align="right"><a href="#contents">Back to contents ↑</a></p>', ""])
+    return "\n".join(lines)
 
 
 def render_monitoring(
@@ -222,20 +401,68 @@ def render_monitoring(
     return replace_update_date(text, date)
 
 
-def timeline_row(row: dict[str, str]) -> str:
-    project = f"[{markdown_text(row['Project'])}]({row['Repository']})"
-    targets = "<br>".join(markdown_text(value) for value in split_values(row["Target"])) or "-"
-    categories = (
-        "<br>".join(markdown_text(value) for value in split_values(row["Categories"]))
-        or "-"
-    )
-    return (
-        f"| {project} "
-        f"| {targets} "
-        f"| {categories} "
-        f"| {markdown_text(row['Description'])} "
-        f"| {stars_as_int(row['Stars']):,} ⭐ |"
-    )
+def timeline_table_open() -> list[str]:
+    return [
+        "<table>",
+        "  <thead>",
+        "    <tr>",
+        '      <th align="right">Date</th>',
+        '      <th align="center"></th>',
+        '      <th align="left">Project</th>',
+        "      <th></th>",
+        "    </tr>",
+        "  </thead>",
+        "  <tbody>",
+    ]
+
+
+def timeline_row(
+    row: dict[str, str],
+    date_label: str = "",
+    date_count: int | None = None,
+) -> list[str]:
+    project = escape(row["Project"])
+    repository = escape(row["Repository"], quote=True)
+    description = escape(row["Description"])
+    target_inputs = escape(row.get("Target Input", "")) or "-"
+    category_labels = " · ".join(
+        escape(value) for value in split_values(row["Categories"])
+    ) or "-"
+    date_cell = ""
+    if date_label and date_count is not None:
+        date_cell = (
+            f"<strong>{escape(date_label)}</strong><br>"
+            f"<sub>{date_count} {count_label(date_count)}</sub>"
+        )
+    return [
+        "    <tr>",
+        f'      <td align="right" valign="middle">{date_cell}</td>',
+        (
+            '      <td align="center" valign="middle">│<br>'
+            '<img src=".github/assets/new-dot.svg" width="7" height="7" alt="">'
+            "<br>│</td>"
+        ),
+        '      <td valign="middle">',
+        f'        <strong><a href="{repository}">{project}</a></strong><br>',
+        f"        {description}<br>",
+        (
+            f"        <sub>Target Input: {target_inputs} · "
+            f"Category: {category_labels}</sub>"
+        ),
+        "      </td>",
+        (
+            '      <td align="right" valign="top"><strong>⭐&nbsp;'
+            f"{stars_as_int(row['Stars']):,}</strong></td>"
+        ),
+        "    </tr>",
+    ]
+
+
+def timeline_table_close() -> list[str]:
+    return [
+        "  </tbody>",
+        "</table>",
+    ]
 
 
 def render_timeline(
@@ -261,7 +488,7 @@ def render_timeline(
         "",
         '<div align="center">',
         "  <h1>OSINT Tools Radar Timeline</h1>",
-        "  <p>A chronological view of projects added to the catalogue.</p>",
+        "  <p>A visual chronology of tools added to the catalogue, newest first.</p>",
         "  <p>",
         (
             f'    <img alt="Dated additions: {dated_count}" '
@@ -289,27 +516,36 @@ def render_timeline(
         "</div>",
         "",
         (
-            "> Projects are grouped by the date stored in the canonical `Added` "
-            "column. Newest catalogue entries appear first."
+            "> Each entry shows its catalogue addition date, repository description, "
+            "target input, assigned main category, and current star count."
+        ),
+        (
+            "> Projects without a reliable addition date remain available in the "
+            "collapsed legacy section."
         ),
         "",
     ]
 
+    lines.extend(timeline_table_open())
     for added in sorted(dated, reverse=True):
         group = sorted(dated[added], key=lambda row: row["Project"].casefold())
         count = len(group)
-        lines.extend(
-            [
-                f"## {added} <sup>{count} {count_label(count)}</sup>",
-                "",
-                TIMELINE_HEADER,
-                TIMELINE_ALIGNMENT,
-                *(timeline_row(row) for row in group),
-                "",
-                '<p align="right"><a href="#top">Back to top ↑</a></p>',
-                "",
-            ]
-        )
+        for index, row in enumerate(group):
+            lines.extend(
+                timeline_row(
+                    row,
+                    date_label=added if index == 0 else "",
+                    date_count=count if index == 0 else None,
+                )
+            )
+    lines.extend(timeline_table_close())
+    lines.extend(
+        [
+            "",
+            '<p align="right"><a href="#top">Back to top ↑</a></p>',
+            "",
+        ]
+    )
 
     legacy = sorted(legacy, key=lambda row: row["Project"].casefold())
     legacy_count = len(legacy)
@@ -326,9 +562,20 @@ def render_timeline(
                 "They are listed alphabetically without an invented date."
             ),
             "",
-            TIMELINE_HEADER,
-            TIMELINE_ALIGNMENT,
-            *(timeline_row(row) for row in legacy),
+        ]
+    )
+    lines.extend(timeline_table_open())
+    for index, row in enumerate(legacy):
+        lines.extend(
+            timeline_row(
+                row,
+                date_label="No date" if index == 0 else "",
+                date_count=legacy_count if index == 0 else None,
+            )
+        )
+    lines.extend(timeline_table_close())
+    lines.extend(
+        [
             "",
             "</details>",
             "",

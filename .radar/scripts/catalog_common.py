@@ -26,99 +26,123 @@ NEW_PROJECT_LEGEND = (
 PUBLIC_COLUMNS = [
     "Project",
     "Repository",
-    "Target",
-    "Type",
-    "Compatibility",
     "Description",
-    "Added",
+    "Target Input",
+    "Categories",
+    "Type",
+    "AI Agent",
+    "License",
+    "Stars",
     "Created",
     "Last Update",
-    "Stars",
-    "Source Files",
-    "Categories",
+    "Added",
 ]
 
 MONITOR_COLUMNS = [
+    "Verified",
     "Hosting",
     "Repository ID",
-    "Platforms",
-    "Agent Compatibility",
-    "License",
     "Archived",
     "Fork",
     "Repository Status",
-    "Verified",
-    "Discovery Source",
     "Review Status",
+    "Discovery Source",
+    "Source Files",
 ]
 
 ALL_COLUMNS = PUBLIC_COLUMNS + MONITOR_COLUMNS
 
 TABLE_HEADER = (
-    "| Project | Type | Compatibility | Description | Created | Last Update | Stars |"
+    "| Project | Target Input | Categories | Description | Created | Last Update | Stars |"
 )
-TABLE_ALIGNMENT = "|:---|:---:|:---:|:---|:---:|:---:|---:|"
+TABLE_ALIGNMENT = "|:---|:---|:---:|:---|:---:|:---:|---:|"
+README_TABLE_HEADER = (
+    "| Project | Type | Target Input | Description | Created | Last Update | Stars |"
+)
+README_TABLE_ALIGNMENT = "|:---|:---|:---|:---|:---:|:---:|---:|"
+AGENTIC_TABLE_HEADER = (
+    "| Project | Target Input | Categories | AI Agent | Description | Created | Last Update | Stars |"
+)
+AGENTIC_TABLE_ALIGNMENT = "|:---|:---|:---:|:---|:---|:---:|:---:|---:|"
 
 README_SECTIONS = [
-    ("Person", "Person"),
-    ("Username", "Username"),
-    ("Email", "Email"),
-    ("Phone", "Phone"),
-    ("Domain", "Domain"),
-    ("IP Address", "IP Address"),
-    ("URL", "URL"),
+    ("Identity", "Identity"),
+    ("Social Media", "Social Media"),
+    ("Code Repositories", "Code Repositories"),
+    ("Infrastructure", "Infrastructure"),
+    ("Web", "Web"),
     ("Dark Web", "Dark Web"),
-    ("Image", "Image"),
-    ("Location", "Location"),
-    ("Company", "Company"),
+    ("Threat Intelligence", "Threat Intelligence"),
+    ("Documents & Records", "Documents & Records"),
+    ("Media", "Media"),
+    ("Geolocation", "Geolocation"),
     ("Cryptocurrency", "Cryptocurrency"),
-    ("General", "General"),
-    ("Cross-platform", "Social platforms / Cross-platform"),
-    ("X and Twitter", "Social platforms / X and Twitter"),
-    ("Facebook", "Social platforms / Facebook"),
-    ("Instagram", "Social platforms / Instagram"),
-    ("LinkedIn", "Social platforms / LinkedIn"),
-    ("Reddit", "Social platforms / Reddit"),
-    ("Telegram", "Social platforms / Telegram"),
-    ("TikTok", "Social platforms / TikTok"),
-    ("YouTube", "Social platforms / YouTube"),
-    ("Snapchat", "Social platforms / Snapchat"),
-    ("WhatsApp", "Social platforms / WhatsApp"),
-    ("Steam", "Social platforms / Steam"),
-    ("GitHub", "Social platforms / GitHub"),
-    ("Discord", "Social platforms / Discord"),
+    ("Investigation", "Investigation"),
 ]
 
-AGENTIC_SECTIONS = [
-    (
-        "OSINT investigation and intelligence",
-        "Agentic / OSINT investigation and intelligence",
-    ),
-    (
-        "Reconnaissance and threat intelligence",
-        "Agentic / Reconnaissance and threat intelligence",
-    ),
-    (
-        "Web research and source discovery",
-        "Agentic / Web research and source discovery",
-    ),
-    (
-        "Academic and structured research",
-        "Agentic / Academic and structured research",
-    ),
-]
+AGENTIC_SECTIONS = README_SECTIONS
 
-ALL_CATEGORIES = {
-    category for _, category in README_SECTIONS + AGENTIC_SECTIONS
-} | {"Emerging"}
+BASE_CATEGORIES = [category for _, category in README_SECTIONS]
+ALL_CATEGORIES = set(BASE_CATEGORIES)
+TARGET_INPUTS = {
+    "Name",
+    "Username",
+    "Email",
+    "Phone Number",
+    "Domain",
+    "IP Address",
+    "ASN",
+    "CIDR",
+    "URL",
+    "Onion Service",
+    "Image",
+    "Location",
+    "BSSID / SSID",
+    "Organization Name",
+    "Crypto Address",
+    "File Hash",
+    "Document",
+    "Keyword",
+    "Video",
+    "Repository URL",
+    "Event Data",
+    "Coordinates",
+    "Dataset",
+    "CVE ID",
+    "File",
+    "Audio",
+    "Text",
+    "Aircraft ID",
+}
+SOURCE_FILE_ORDER = ["README.md", "EMERGING.md", "AGENTIC.md"]
 
 
 def split_values(value: str) -> list[str]:
     return [item.strip() for item in value.split(";") if item.strip()]
 
 
+def canonical_target_inputs(value: str | Iterable[str]) -> list[str]:
+    raw_values = split_values(value) if isinstance(value, str) else list(value)
+    normalized: list[str] = []
+    for raw_value in raw_values:
+        target = raw_value.strip()
+        if target not in TARGET_INPUTS:
+            raise ValueError(f"Unknown Target Input: {target}")
+        if target not in normalized:
+            normalized.append(target)
+    return normalized
+
+
+def canonical_source_files(value: str | Iterable[str]) -> list[str]:
+    raw_values = split_values(value) if isinstance(value, str) else list(value)
+    unknown = [item for item in raw_values if item not in SOURCE_FILE_ORDER]
+    if unknown:
+        raise ValueError(f"Unknown Source Files: {', '.join(unknown)}")
+    return [item for item in SOURCE_FILE_ORDER if item in raw_values]
+
+
 def load_catalog(path: Path = CATALOG_PATH) -> tuple[list[str], list[dict[str, str]]]:
-    with path.open(newline="", encoding="utf-8") as handle:
+    with path.open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         if reader.fieldnames is None:
             raise ValueError(f"Missing CSV header: {path}")
@@ -145,21 +169,8 @@ def categories(row: dict[str, str]) -> list[str]:
     return split_values(row.get("Categories", ""))
 
 
-def source_files_for_categories(values: Iterable[str]) -> list[str]:
-    files: list[str] = []
-    for category in values:
-        if category == "Emerging" and "EMERGING.md" not in files:
-            files.append("EMERGING.md")
-        elif category.startswith("Agentic / ") and "AGENTIC.md" not in files:
-            files.append("AGENTIC.md")
-        elif (
-            category != "Emerging"
-            and not category.startswith("Agentic / ")
-            and "README.md" not in files
-        ):
-            files.append("README.md")
-    order = {"README.md": 0, "EMERGING.md": 1, "AGENTIC.md": 2}
-    return sorted(files, key=order.__getitem__)
+def source_files(row: dict[str, str]) -> list[str]:
+    return split_values(row.get("Source Files", ""))
 
 
 def rows_for_category(rows: Iterable[dict[str, str]], category: str) -> list[dict[str, str]]:
@@ -170,6 +181,21 @@ def rows_for_category(rows: Iterable[dict[str, str]], category: str) -> list[dic
     ]
     # CSV order is the deterministic tiebreaker so equal-star projects do not
     # jump around when the renderer runs.
+    return sorted(selected, key=lambda row: -stars_as_int(row.get("Stars", "0")))
+
+
+def rows_for_source(
+    rows: Iterable[dict[str, str]],
+    source_file: str,
+    category: str = "",
+) -> list[dict[str, str]]:
+    selected = [
+        row
+        for row in rows
+        if source_file in source_files(row)
+        and (not category or row.get("Categories", "") == category)
+        and row.get("Review Status", "accepted") == "accepted"
+    ]
     return sorted(selected, key=lambda row: -stars_as_int(row.get("Stars", "0")))
 
 
@@ -187,8 +213,35 @@ def format_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
     project = f"{marker}[{markdown_text(row['Project'])}]({row['Repository']})"
     return (
         f"| {project} "
+        f"| {markdown_text(row['Target Input']) or '-'} "
+        f"| {markdown_text(row['Categories'])} "
+        f"| {markdown_text(row['Description'])} "
+        f"| {row['Created']} | {row['Last Update']} "
+        f"| {stars_as_int(row['Stars']):,} ⭐ |"
+    )
+
+
+def format_readme_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
+    marker = f"{NEW_PROJECT_MARKER} " if is_new else ""
+    project = f"{marker}[{markdown_text(row['Project'])}]({row['Repository']})"
+    return (
+        f"| {project} "
         f"| {markdown_text(row['Type']) or '-'} "
-        f"| {markdown_text(row['Compatibility']) or '-'} "
+        f"| {markdown_text(row['Target Input']) or '-'} "
+        f"| {markdown_text(row['Description'])} "
+        f"| {row['Created']} | {row['Last Update']} "
+        f"| {stars_as_int(row['Stars']):,} ⭐ |"
+    )
+
+
+def format_agentic_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
+    marker = f"{NEW_PROJECT_MARKER} " if is_new else ""
+    project = f"{marker}[{markdown_text(row['Project'])}]({row['Repository']})"
+    return (
+        f"| {project} "
+        f"| {markdown_text(row['Target Input']) or '-'} "
+        f"| {markdown_text(row['Categories'])} "
+        f"| {markdown_text(row['AI Agent']) or '-'} "
         f"| {markdown_text(row['Description'])} "
         f"| {row['Created']} | {row['Last Update']} "
         f"| {stars_as_int(row['Stars']):,} ⭐ |"

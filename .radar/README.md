@@ -10,14 +10,16 @@
     <img alt="Third-party code execution: disabled" src="https://img.shields.io/badge/third--party_code-not_executed-1f883d?style=flat-square">
     <img alt="Last update: 2026-07-16" src="https://img.shields.io/badge/last_update-2026--07--16-1f883d?style=flat-square">
   </p>
-  <p><a href="README.md">Monitoring</a> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · <a href="../TIMELINE.md">Catalogue Timeline</a> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
+  <p><strong><a href="README.md">Monitoring</a></strong> · <a href="../README.md">OSINT Tools Radar</a> · <a href="../EMERGING.md">Emerging Projects</a> · <a href="../AGENTIC.md">Agentic AI OSINT</a> · <a href="../TIMELINE.md">Catalogue Timeline</a> · <a href="../osint-repositories.csv">Repository Database CSV</a></p>
 </div>
 
 ## Operating model
 
-`../osint-repositories.csv` is the canonical, deduplicated repository database. The Markdown tables are generated views of accepted open-source tool and integration records. Candidate discovery is intentionally separate from publication.
+`../osint-repositories.csv` is the canonical, deduplicated repository database in CSV format. The Markdown tables are generated views of accepted open-source tool and integration records. Candidate discovery is intentionally separate from publication.
 
 The canonical CSV stores the publication date in its `Added` column. The renderer places a 6 px green dot before projects in public Markdown views for 14 days after acceptance.
+
+`Categories` stores exactly one of the 12 main catalogue categories. `Target Input` stores only concrete data accepted or investigated by a tool and may contain several semicolon-separated values. `AI Agent` records documented agent compatibility. Membership in the additional `EMERGING.md` and `AGENTIC.md` views is stored separately in `Source Files`.
 
 ```text
 .radar/data/sources.csv -> discover_candidates.py -> .radar/data/candidates.csv -> human review
@@ -33,14 +35,26 @@ The monitor never clones, imports, installs, or executes code from catalogued re
 
 | File | Purpose |
 |---|---|
-| `../osint-repositories.csv` | Canonical accepted open-source tool records, publication dates, and current repository metadata. |
-| `data/candidates.csv` | Automatically discovered repositories awaiting an explicit decision. |
-| `data/sources.csv` | Enabled discovery queries, providers, windows, and suggested classifications. |
+| `../osint-repositories.csv` | Canonical CSV database of accepted open-source tool records, publication dates, and current repository metadata. |
+| `data/candidates.csv` | Automatically discovered repositories with a suggested target input, main category, and optional generated views, awaiting an explicit decision. |
+| `data/sources.csv` | Enabled discovery queries, providers, windows, suggested target inputs, categories, and optional generated views. |
 | `data/snapshots.csv` | Point-in-time metadata used for trend and change reporting. |
-| `../README.md` | Generated main and social-platform catalogue views. |
+| `../README.md` | Generated main catalogue organized into 12 mutually exclusive categories. |
 | `../EMERGING.md` | Generated early-stage project view. |
 | `../AGENTIC.md` | Generated skills, plugins, MCP, and agent integration views. |
-| `../TIMELINE.md` | Generated chronological view of catalogue additions. |
+| `../TIMELINE.md` | Generated visual chronology of additions with descriptions, categories, and current star counts. |
+
+## Canonical taxonomy
+
+Every accepted record has exactly one main category:
+
+`Identity`, `Social Media`, `Code Repositories`, `Infrastructure`, `Web`, `Dark Web`, `Threat Intelligence`, `Documents & Records`, `Media`, `Geolocation`, `Cryptocurrency`, or `Investigation`.
+
+Allowed `Target Input` values are:
+
+`Name`, `Username`, `Email`, `Phone Number`, `Domain`, `IP Address`, `ASN`, `CIDR`, `URL`, `Onion Service`, `Image`, `Location`, `BSSID / SSID`, `Organization Name`, `Crypto Address`, `File Hash`, `Document`, `Keyword`, `Video`, `Repository URL`, `Event Data`, `Coordinates`, `Dataset`, `CVE ID`, `File`, `Audio`, `Text`, and `Aircraft ID`.
+
+`Target Input` may contain several semicolon-separated values. It may be blank only when a tool has no fixed input type, such as a general investigation workspace or reusable agent workflow.
 
 ## Local commands
 
@@ -108,8 +122,9 @@ Automated discovery provides suggestions, not final classifications. Before acce
 - has a practical OSINT, SOCMINT, GEOINT, recon, CTI, research, or evidence-analysis use case;
 - is not merely a link collection, product landing page, prompt stub, exact repository duplicate, or canonical mirror;
 - has a neutral description supported by its implementation and documentation;
-- is assigned to the most specific target and catalogue category;
-- documents any claimed platform or agent compatibility;
+- is assigned one appropriate main category;
+- lists only concrete input types in `Target Input`, leaving it blank when no fixed input exists;
+- documents any value stored in `AI Agent`;
 - has a meaningful latest commit on its default branch rather than activity limited to abandoned side branches.
 
 Functional overlap with another accepted project is not a rejection reason. Competing implementations remain useful for market coverage when each repository has a distinct, maintained implementation. Fork status alone is also not a rejection reason when the fork is the maintained implementation or an active successor.
@@ -127,15 +142,15 @@ Accept a standalone project:
 ```bash
 python3 .radar/scripts/review_candidate.py https://github.com/owner/repository \
   --accept \
-  --target Domain \
-  --category Domain \
+  --target-input Domain \
+  --category Infrastructure \
   --type Python \
   --description "Discovers public infrastructure associated with a domain."
 python3 .radar/scripts/render_catalog.py --write
 python3 .radar/scripts/validate_catalog.py
 ```
 
-Accept a project into more than one generated view by repeating `--category`. Compatibility values use semicolons when both an investigated platform and an agent runtime apply.
+Use only values from the canonical `Target Input` taxonomy and assign exactly one `--category`. Add `--view EMERGING.md` for the watchlist. For an agent integration, add `--view AGENTIC.md` together with a documented `--ai-agent` value. Repeat `--view` when both generated views apply.
 
 ## Discovery sources
 
@@ -153,7 +168,7 @@ Edit `.radar/data/sources.csv` to add, disable, or narrow a query. A new provide
 
 ## Scheduled workflows
 
-- `validate.yml` checks Python syntax, generated Markdown drift, CSV integrity, links between local files, duplicate repositories, table schemas, and category mappings on every push and pull request.
+- `validate.yml` checks Python syntax, generated Markdown drift, CSV integrity, links between local files, duplicate repositories, table schemas, the 12-category taxonomy, and allowed target inputs on every push and pull request.
 - `refresh.yml` runs weekly, refreshes GitHub metadata, appends a snapshot, regenerates all catalogue tables, opens or updates a review pull request, and creates a dated market-watch issue.
 - `discover.yml` runs daily, scans configured sources, and opens or updates a review pull request when `.radar/data/candidates.csv` changes.
 
@@ -169,7 +184,7 @@ Scheduled workflows use the repository-provided `GITHUB_TOKEN`. The repository m
 - Repository age is not a removal criterion. Repositories whose latest default-branch commit predates `2020-01-01` are removed, while older projects with current maintenance remain eligible.
 - A recent push does not by itself prove operational usefulness. Stale integrations are reviewed for deprecated APIs, unsupported runtimes, broken installation paths, explicit maintenance notices, and maintained successors.
 - A confirmed `404` marks a repository as unavailable. Transient network and API failures do not change repository status.
-- Descriptions, targets, categories, types, and compatibility labels are never overwritten by metadata refreshes.
+- Descriptions, target inputs, categories, source-file memberships, types, and AI-agent labels are never overwritten by metadata refreshes.
 
 ## Recommended review rhythm
 
@@ -177,7 +192,7 @@ Scheduled workflows use the repository-provided `GITHUB_TOKEN`. The repository m
 |---|---|
 | Daily | Triage new high-confidence candidates and obvious false positives. |
 | Weekly | Review metadata pull request, star movement, archival changes, and unavailable repositories. |
-| Monthly | Audit low-activity projects, category balance, source quality, and repeated discovery noise. |
-| Quarterly | Revisit inclusion rules, providers, target taxonomy, and agent compatibility labels. |
+| Monthly | Audit low-activity projects, category balance, target-input quality, source quality, and repeated discovery noise. |
+| Quarterly | Revisit inclusion rules, providers, the 12-category taxonomy, allowed target inputs, and AI-agent labels. |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>

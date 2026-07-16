@@ -7,10 +7,13 @@ import csv
 import re
 import sys
 from collections import defaultdict
+from html import unescape
 from pathlib import Path
 from urllib.parse import urlparse
 
 from catalog_common import (
+    AGENTIC_TABLE_ALIGNMENT,
+    AGENTIC_TABLE_HEADER,
     AGENTIC_SECTIONS,
     ALL_CATEGORIES,
     ALL_COLUMNS,
@@ -20,16 +23,22 @@ from catalog_common import (
     NEW_PROJECT_MARKER,
     RADAR_ROOT,
     README_SECTIONS,
+    README_TABLE_ALIGNMENT,
+    README_TABLE_HEADER,
     ROOT,
     TABLE_ALIGNMENT,
     TABLE_HEADER,
+    canonical_source_files,
+    canonical_target_inputs,
     categories,
+    format_agentic_markdown_row,
     format_markdown_row,
+    format_readme_markdown_row,
     load_catalog,
     recent_repository_keys,
     repository_key,
     rows_for_category,
-    source_files_for_categories,
+    rows_for_source,
     split_values,
     stars_as_int,
     verified_date,
@@ -57,10 +66,16 @@ def parse_markdown_tables(path: Path, validation: Validation) -> dict[str, list[
         if line.startswith("## "):
             current_heading = re.sub(r"\s*<sup>.*?</sup>\s*$", "", line[3:]).strip()
             current_heading = re.sub(r"^[^\w]+", "", current_heading)
-        if line != TABLE_HEADER:
+        table_schemas = {
+            TABLE_HEADER: (TABLE_ALIGNMENT, 7),
+            README_TABLE_HEADER: (README_TABLE_ALIGNMENT, 7),
+            AGENTIC_TABLE_HEADER: (AGENTIC_TABLE_ALIGNMENT, 8),
+        }
+        if line not in table_schemas:
             continue
+        expected_alignment, expected_cells = table_schemas[line]
         validation.check(
-            index + 1 < len(lines) and lines[index + 1] == TABLE_ALIGNMENT,
+            index + 1 < len(lines) and lines[index + 1] == expected_alignment,
             f"{path.name}:{index + 1}: invalid table alignment row",
         )
         rows: list[str] = []
@@ -75,8 +90,8 @@ def parse_markdown_tables(path: Path, validation: Validation) -> dict[str, list[
         ):
             cells = [cell.strip() for cell in lines[cursor].strip().strip("|").split("|")]
             validation.check(
-                len(cells) == 7,
-                f"{path.name}:{cursor + 1}: expected 7 table cells, found {len(cells)}",
+                len(cells) == expected_cells,
+                f"{path.name}:{cursor + 1}: expected {expected_cells} table cells, found {len(cells)}",
             )
             rows.append(lines[cursor])
             cursor += 1
@@ -85,22 +100,23 @@ def parse_markdown_tables(path: Path, validation: Validation) -> dict[str, list[
 
 
 def find_heading_table(tables: dict[str, list[str]], label: str) -> list[str] | None:
+    if label in tables:
+        return tables[label]
     for heading, rows in tables.items():
-        if heading == label or heading.endswith(f" {label}"):
+        if heading.endswith(f" {label}"):
             return rows
     return None
 
 
 def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, str]]]:
     fields, rows = load_catalog()
-    missing = [field for field in ALL_COLUMNS if field not in fields]
-    validation.check(not missing, f"osint-repositories.csv: missing columns: {', '.join(missing)}")
+    validation.check(fields == ALL_COLUMNS, "osint-repositories.csv: invalid header or column order")
 
     seen_urls: dict[str, int] = {}
     seen_ids: dict[str, int] = {}
     allowed_status = {"active", "unavailable", "unknown"}
     for line_number, row in enumerate(rows, 2):
-        for field in ("Project", "Target", "Type", "Description", "Hosting"):
+        for field in ("Project", "Type", "Description", "Hosting"):
             validation.check(bool(row.get(field, "").strip()), f"osint-repositories.csv:{line_number}: missing {field}")
         key = repository_key(row.get("Repository", ""))
         validation.check(bool(key), f"osint-repositories.csv:{line_number}: missing Repository")
@@ -140,14 +156,39 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
 
         row_categories = categories(row)
         validation.check(bool(row_categories), f"osint-repositories.csv:{line_number}: missing Categories")
+        validation.check(
+            len(row_categories) == 1,
+            f"osint-repositories.csv:{line_number}: exactly one main category is required",
+        )
         unknown_categories = [value for value in row_categories if value not in ALL_CATEGORIES]
         validation.check(
             not unknown_categories,
             f"osint-repositories.csv:{line_number}: unknown Categories: {', '.join(unknown_categories)}",
         )
-        expected_sources = source_files_for_categories(row_categories)
+        try:
+            normalized_targets = canonical_target_inputs(row.get("Target Input", ""))
+        except ValueError as error:
+            validation.errors.append(f"osint-repositories.csv:{line_number}: {error}")
+            normalized_targets = []
+        validation.check(
+            split_values(row.get("Target Input", "")) == normalized_targets,
+            f"osint-repositories.csv:{line_number}: Target Input is not canonical",
+        )
+        try:
+            expected_sources = canonical_source_files(row.get("Source Files", ""))
+        except ValueError as error:
+            validation.errors.append(f"osint-repositories.csv:{line_number}: {error}")
+            expected_sources = []
         actual_sources = split_values(row.get("Source Files", ""))
-        validation.check(actual_sources == expected_sources, f"osint-repositories.csv:{line_number}: Source Files do not match Categories")
+        validation.check(
+            actual_sources == expected_sources and "README.md" in actual_sources,
+            f"osint-repositories.csv:{line_number}: Source Files are not canonical",
+        )
+        if "AGENTIC.md" in actual_sources:
+            validation.check(
+                bool(row.get("AI Agent", "").strip()),
+                f"osint-repositories.csv:{line_number}: AGENTIC.md entry is missing AI Agent",
+            )
         validation.check(row.get("Repository Status", "") in allowed_status, f"osint-repositories.csv:{line_number}: invalid Repository Status")
         validation.check(row.get("Review Status", "") == "accepted", f"osint-repositories.csv:{line_number}: canonical records must be accepted")
         validation.check(row.get("Archived", "") == "false", f"osint-repositories.csv:{line_number}: archived repositories must be removed")
@@ -159,24 +200,44 @@ def validate_catalog(validation: Validation) -> tuple[list[str], list[dict[str, 
 
 def validate_markdown(validation: Validation, rows: list[dict[str, str]]) -> None:
     recent_keys = recent_repository_keys(rows, verified_date(rows))
-    specifications = {
-        ROOT / "README.md": README_SECTIONS,
-        ROOT / "EMERGING.md": [("Projects", "Emerging")],
-        ROOT / "AGENTIC.md": AGENTIC_SECTIONS,
-    }
-    for path, sections in specifications.items():
+    specifications = [
+        (
+            ROOT / "README.md",
+            [
+                (label, rows_for_category(rows, category), format_readme_markdown_row)
+                for label, category in README_SECTIONS
+            ],
+        ),
+        (
+            ROOT / "EMERGING.md",
+            [("Projects", rows_for_source(rows, "EMERGING.md"), format_markdown_row)],
+        ),
+        (
+            ROOT / "AGENTIC.md",
+            [
+                (
+                    label,
+                    rows_for_source(rows, "AGENTIC.md", category),
+                    format_agentic_markdown_row,
+                )
+                for label, category in AGENTIC_SECTIONS
+                if rows_for_source(rows, "AGENTIC.md", category)
+            ],
+        ),
+    ]
+    for path, sections in specifications:
         tables = parse_markdown_tables(path, validation)
-        for label, category in sections:
+        for label, selected, formatter in sections:
             actual = find_heading_table(tables, label)
             validation.check(actual is not None, f"{path.name}: missing table for {label}")
             if actual is None:
                 continue
             expected = [
-                format_markdown_row(
+                formatter(
                     row,
                     repository_key(row["Repository"]) in recent_keys,
                 )
-                for row in rows_for_category(rows, category)
+                for row in selected
             ]
             validation.check(actual == expected, f"{path.name}: generated rows differ in {label}")
 
@@ -195,20 +256,6 @@ def validate_markdown(validation: Validation, rows: list[dict[str, str]]) -> Non
             ),
             f"{path.name}: contains legacy dot markers",
         )
-        marker_pattern = (
-            r'<img src="\.github/assets/new-dot\.svg"[^>]*>'
-        )
-        urls = [
-            repository_key(url)
-            for url in re.findall(
-                rf"^\| (?:{marker_pattern} )?\[[^]]+\]\((https://[^)]+)\)",
-                text,
-                flags=re.MULTILINE,
-            )
-        ]
-        validation.check(len(urls) == len(set(urls)), f"{path.name}: duplicate repository rows")
-
-
 def validate_local_links(validation: Validation) -> None:
     for path in (
         ROOT / "README.md",
@@ -232,11 +279,10 @@ def validate_timeline(
     path = ROOT / "TIMELINE.md"
     text = path.read_text(encoding="utf-8")
     actual = [
-        repository_key(url)
+        repository_key(unescape(url))
         for url in re.findall(
-            r"^\| \[[^]]+\]\((https://[^)]+)\) \|",
+            r'<strong><a href="(https://[^"]+)">',
             text,
-            flags=re.MULTILINE,
         )
     ]
     dated_groups: dict[str, list[dict[str, str]]] = defaultdict(list)
@@ -276,6 +322,7 @@ def validate_update_badges(
         path
         for path in ROOT.rglob("*.md")
         if ".git" not in path.relative_to(ROOT).parts
+        and not path.name.endswith(".local.md")
     )
     for path in markdown_files:
         text = path.read_text(encoding="utf-8")
@@ -292,23 +339,23 @@ def validate_update_badges(
 def validate_navigation(validation: Validation) -> None:
     expected = {
         ROOT / "README.md": (
-            '<p><a href="README.md">OSINT Tools Radar</a> · '
+            '<p><strong><a href="README.md">OSINT Tools Radar</a></strong> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
-            '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
             '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "EMERGING.md": (
-            '<p><a href="EMERGING.md">Emerging Projects</a> · '
-            '<a href="README.md">OSINT Tools Radar</a> · '
-            '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<p><a href="README.md">OSINT Tools Radar</a> · '
+            '<strong><a href="EMERGING.md">Emerging Projects</a></strong> · '
+            '<a href="AGENTIC.md">Agentic AI OSINT</a> · '
             '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         ROOT / "AGENTIC.md": (
-            '<p><strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
-            '<a href="README.md">OSINT Tools Radar</a> · '
+            '<p><a href="README.md">OSINT Tools Radar</a> · '
             '<a href="EMERGING.md">Emerging Projects</a> · '
+            '<strong><a href="AGENTIC.md">Agentic AI OSINT</a></strong> · '
             '<a href="TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
@@ -320,10 +367,10 @@ def validate_navigation(validation: Validation) -> None:
             '<a href="osint-repositories.csv">Repository Database CSV</a></p>'
         ),
         RADAR_ROOT / "README.md": (
-            '<p><a href="README.md">Monitoring</a> · '
+            '<p><strong><a href="README.md">Monitoring</a></strong> · '
             '<a href="../README.md">OSINT Tools Radar</a> · '
             '<a href="../EMERGING.md">Emerging Projects</a> · '
-            '<strong><a href="../AGENTIC.md">Agentic AI OSINT</a></strong> · '
+            '<a href="../AGENTIC.md">Agentic AI OSINT</a> · '
             '<a href="../TIMELINE.md">Catalogue Timeline</a> · '
             '<a href="../osint-repositories.csv">Repository Database CSV</a></p>'
         ),
@@ -346,7 +393,7 @@ def validate_auxiliary_csv(
     schemas = {
         DATA_ROOT / "candidates.csv": [
             "Project", "Repository", "Hosting", "Discovered", "Discovery Source", "Query",
-            "Suggested Target", "Suggested Category", "Description", "Created", "Last Update",
+            "Suggested Target Input", "Suggested Category", "Suggested Views", "Description", "Created", "Last Update",
             "Stars", "Language", "License", "Archived", "Fork", "Score", "Confidence",
             "Evidence", "Review Status", "Notes",
         ],
@@ -355,7 +402,7 @@ def validate_auxiliary_csv(
             "Last Update", "Archived",
         ],
         DATA_ROOT / "sources.csv": [
-            "Name", "Provider", "Query", "Window", "Suggested Target", "Suggested Category", "Enabled",
+            "Name", "Provider", "Query", "Window", "Suggested Target Input", "Suggested Category", "Suggested Views", "Enabled",
         ],
     }
     for path, expected in schemas.items():
@@ -383,6 +430,30 @@ def validate_auxiliary_csv(
                 validation.check(row.get("Review Status") in {"review", "accepted", "rejected"}, f"candidates.csv:{line_number}: invalid Review Status")
                 validation.check(row.get("Archived") == "false", f"candidates.csv:{line_number}: archived candidates must be removed")
                 validation.check(row.get("Fork") in {"true", "false"}, f"candidates.csv:{line_number}: invalid Fork")
+                try:
+                    suggested_targets = canonical_target_inputs(row.get("Suggested Target Input", ""))
+                except ValueError as error:
+                    validation.errors.append(f"candidates.csv:{line_number}: {error}")
+                    suggested_targets = []
+                validation.check(
+                    split_values(row.get("Suggested Target Input", "")) == suggested_targets,
+                    f"candidates.csv:{line_number}: Suggested Target Input is not canonical",
+                )
+                validation.check(
+                    row.get("Suggested Category", "") in ALL_CATEGORIES,
+                    f"candidates.csv:{line_number}: unknown Suggested Category",
+                )
+                suggested_views = split_values(row.get("Suggested Views", ""))
+                try:
+                    normalized_views = canonical_source_files(suggested_views)
+                except ValueError as error:
+                    validation.errors.append(f"candidates.csv:{line_number}: {error}")
+                    normalized_views = []
+                validation.check(
+                    suggested_views == normalized_views
+                    and "README.md" not in suggested_views,
+                    f"candidates.csv:{line_number}: unknown Suggested Views",
+                )
                 if row.get("Review Status") == "accepted":
                     current = canonical.get(key)
                     validation.check(current is not None, f"candidates.csv:{line_number}: accepted candidate is missing from canonical data")
@@ -440,7 +511,30 @@ def validate_auxiliary_csv(
                 )
                 validation.check(bool(row.get("Query", "")), f"sources.csv:{line_number}: missing Query")
                 validation.check(row.get("Window") in {"created", "pushed", "updated"}, f"sources.csv:{line_number}: invalid Window")
-                validation.check(row.get("Suggested Category") in ALL_CATEGORIES, f"sources.csv:{line_number}: unknown Suggested Category")
+                try:
+                    suggested_targets = canonical_target_inputs(row.get("Suggested Target Input", ""))
+                except ValueError as error:
+                    validation.errors.append(f"sources.csv:{line_number}: {error}")
+                    suggested_targets = []
+                validation.check(
+                    split_values(row.get("Suggested Target Input", "")) == suggested_targets,
+                    f"sources.csv:{line_number}: Suggested Target Input is not canonical",
+                )
+                validation.check(
+                    row.get("Suggested Category", "") in ALL_CATEGORIES,
+                    f"sources.csv:{line_number}: unknown Suggested Category",
+                )
+                suggested_views = split_values(row.get("Suggested Views", ""))
+                try:
+                    normalized_views = canonical_source_files(suggested_views)
+                except ValueError as error:
+                    validation.errors.append(f"sources.csv:{line_number}: {error}")
+                    normalized_views = []
+                validation.check(
+                    suggested_views == normalized_views
+                    and "README.md" not in suggested_views,
+                    f"sources.csv:{line_number}: unknown Suggested Views",
+                )
                 validation.check(row.get("Enabled", "").casefold() in {"true", "false"}, f"sources.csv:{line_number}: invalid Enabled")
 
 

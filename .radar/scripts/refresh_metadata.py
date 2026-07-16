@@ -301,10 +301,10 @@ def main() -> int:
     args = parser.parse_args()
 
     fields, rows = load_catalog()
+    if fields != ALL_COLUMNS:
+        print("Canonical catalogue schema does not match ALL_COLUMNS", file=sys.stderr)
+        return 2
     original_keys = {repository_key(row["Repository"]) for row in rows}
-    for field in ALL_COLUMNS:
-        if field not in fields:
-            fields.append(field)
 
     requested = {repository_key(value) for value in args.repository}
     if (requested or args.limit) and (args.drop_archived or args.drop_stale_before):
@@ -524,7 +524,7 @@ def main() -> int:
         snapshots = retained_snapshots
 
     if args.write:
-        write_csv(ROOT / "osint-repositories.csv", fields, rows)
+        write_csv(ROOT / "osint-repositories.csv", ALL_COLUMNS, rows)
         if candidate_fields:
             write_csv(CANDIDATE_PATH, candidate_fields, candidates)
         if args.snapshot:

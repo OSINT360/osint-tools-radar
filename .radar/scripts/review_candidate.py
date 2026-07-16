@@ -15,10 +15,10 @@ from catalog_common import (
     ALL_COLUMNS,
     MIN_LAST_UPDATE,
     ROOT,
-    categories,
+    canonical_source_files,
+    canonical_target_inputs,
     load_catalog,
     repository_key,
-    source_files_for_categories,
     split_values,
     write_csv,
 )
@@ -178,10 +178,20 @@ def main() -> int:
     decision.add_argument("--accept", action="store_true")
     decision.add_argument("--reject", action="store_true")
     parser.add_argument("--project", help="Override project name")
-    parser.add_argument("--target", help="Final target")
-    parser.add_argument("--category", action="append", default=[], help="Final category; may be repeated")
+    parser.add_argument(
+        "--target-input",
+        default="",
+        help="Concrete input type; separate multiple values with semicolons",
+    )
+    parser.add_argument("--category", help="One main catalogue category")
+    parser.add_argument(
+        "--view",
+        action="append",
+        default=[],
+        help="Additional generated view: EMERGING.md or AGENTIC.md; may be repeated",
+    )
     parser.add_argument("--type", dest="project_type", help="Language or integration type")
-    parser.add_argument("--compatibility", default="-", help="Published compatibility value")
+    parser.add_argument("--ai-agent", default="", help="Documented agent runtime or compatibility")
     parser.add_argument("--description", help="Curated neutral description")
     parser.add_argument("--notes", default="")
     args = parser.parse_args()
@@ -227,7 +237,6 @@ def main() -> int:
         return 1
 
     required = {
-        "target": args.target,
         "category": args.category,
         "type": args.project_type,
         "description": args.description,
@@ -238,67 +247,61 @@ def main() -> int:
         return 2
 
     fields, catalogue = load_catalog()
+    if fields != ALL_COLUMNS:
+        print("Canonical catalogue schema does not match ALL_COLUMNS", file=sys.stderr)
+        return 1
     if any(repository_key(row["Repository"]) == key for row in catalogue):
         print(f"Repository is already catalogued: {candidate['Repository']}", file=sys.stderr)
         return 1
-    for field in ALL_COLUMNS:
-        if field not in fields:
-            fields.append(field)
 
-    final_categories: list[str] = []
-    for value in args.category:
-        final_categories.extend(split_values(value))
-    final_categories = list(dict.fromkeys(final_categories))
-    invalid_categories = [value for value in final_categories if value not in ALL_CATEGORIES]
-    if invalid_categories:
-        print(f"Unknown category: {', '.join(invalid_categories)}", file=sys.stderr)
+    try:
+        final_targets = canonical_target_inputs(args.target_input)
+    except ValueError as error:
+        print(str(error), file=sys.stderr)
         return 2
-    source_files = source_files_for_categories(final_categories)
-    social_category = next(
-        (value.split(" / ", 1)[1] for value in final_categories if value.startswith("Social platforms / ")),
-        "",
-    )
-    agentic = any(value.startswith("Agentic / ") for value in final_categories)
-    compatibility_parts = split_values(args.compatibility)
+    if args.category not in ALL_CATEGORIES:
+        print(f"Unknown category: {args.category}", file=sys.stderr)
+        return 2
+    requested_views: list[str] = []
+    for value in args.view:
+        requested_views.extend(split_values(value))
+    try:
+        source_files = canonical_source_files(["README.md", *requested_views])
+    except ValueError as error:
+        print(str(error), file=sys.stderr)
+        return 2
+    if "AGENTIC.md" in source_files and not args.ai_agent.strip():
+        print("--ai-agent is required for AGENTIC.md entries", file=sys.stderr)
+        return 2
 
     catalogue.append(
         {
             "Project": args.project or candidate["Project"],
             "Repository": candidate["Repository"],
-            "Target": args.target or candidate["Suggested Target"],
-            "Type": args.project_type or candidate["Language"] or "Unknown",
-            "Compatibility": args.compatibility,
             "Description": args.description or candidate["Description"],
-            "Added": date.today().isoformat(),
+            "Target Input": "; ".join(final_targets),
+            "Categories": args.category,
+            "Type": args.project_type or candidate["Language"] or "Unknown",
+            "AI Agent": args.ai_agent,
+            "License": candidate["License"],
+            "Stars": candidate["Stars"] or "0",
             "Created": candidate["Created"],
             "Last Update": candidate["Last Update"],
-            "Stars": candidate["Stars"] or "0",
-            "Source Files": "; ".join(source_files),
-            "Categories": "; ".join(final_categories),
+            "Added": date.today().isoformat(),
+            "Verified": date.today().isoformat(),
             "Hosting": candidate["Hosting"],
             "Repository ID": repository_id,
-            "Platforms": (
-                compatibility_parts[0]
-                if social_category and args.compatibility != "-" and compatibility_parts
-                else social_category
-            ),
-            "Agent Compatibility": (
-                "; ".join(compatibility_parts[1:])
-                if social_category and agentic and len(compatibility_parts) > 1
-                else (args.compatibility if agentic and not social_category and args.compatibility != "-" else "")
-            ),
-            "License": candidate["License"],
             "Archived": candidate["Archived"],
             "Fork": candidate["Fork"],
             "Repository Status": "archived" if candidate["Archived"] == "true" else "active",
-            "Verified": date.today().isoformat(),
-            "Discovery Source": candidate["Discovery Source"],
             "Review Status": "accepted",
+            "Discovery Source": candidate["Discovery Source"],
+            "Source Files": "; ".join(source_files),
         }
     )
     candidate["Review Status"] = "accepted"
     candidate["Notes"] = args.notes
-    write_csv(ROOT / "osint-repositories.csv", fields, catalogue)
+    write_csv(ROOT / "osint-repositories.csv", ALL_COLUMNS, catalogue)
     write_csv(CANDIDATE_PATH, CANDIDATE_FIELDS, candidates)
     print(f"accepted {candidate['Repository']}; run render_catalog.py --write")
     return 0
