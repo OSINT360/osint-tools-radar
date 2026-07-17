@@ -1,0 +1,37 @@
+OSINT Tools Radar GUI
+
+The browser uses `osint-repositories.csv` as its only database. The local server
+reads the current CSV on every catalogue request. The static build creates a
+deployable `catalog.json` snapshot from that same file.
+
+Local development
+
+Run from the repository root:
+
+```bash
+python3 .radar/gui/server.py
+```
+
+Open `http://127.0.0.1:4173`.
+
+Static hosting build
+
+```bash
+python3 .radar/gui/build_static.py --domain tools.osint360.io
+```
+
+Upload the contents of `.radar/gui/dist/` to the document root of the selected
+subdomain. The build has no server-side or npm dependencies.
+
+Features
+
+- full-text search across all catalogue records
+- category, target input, type, license, and freshness filters
+- category, target input, type, star, activity, date, and name sorting
+- all, emerging, agentic, and locally saved views
+- icon-based save and repository actions
+- card and compact list layouts
+- complete CSV database details for every repository
+- responsive desktop, tablet, and mobile layouts
+- keyboard shortcut `/` for search
+- saved tools stored only in local browser storage

@@ -61,9 +61,9 @@ README_TABLE_HEADER = (
 )
 README_TABLE_ALIGNMENT = "|:---|:---|:---|:---|:---:|:---:|---:|"
 AGENTIC_TABLE_HEADER = (
-    "| Project | Target Input | Categories | AI Agent | Description | Created | Last Update | Stars |"
+    "| Project | Target Input | AI Agent | Description | Created | Last Update | Stars |"
 )
-AGENTIC_TABLE_ALIGNMENT = "|:---|:---|:---:|:---|:---|:---:|:---:|---:|"
+AGENTIC_TABLE_ALIGNMENT = "|:---|:---|:---|:---|:---:|:---:|---:|"
 
 README_SECTIONS = [
     ("Identity", "Identity"),
@@ -217,7 +217,7 @@ def format_markdown_row(row: dict[str, str], is_new: bool = False) -> str:
         f"| {markdown_text(row['Categories'])} "
         f"| {markdown_text(row['Description'])} "
         f"| {row['Created']} | {row['Last Update']} "
-        f"| {stars_as_int(row['Stars']):,} ⭐ |"
+        f"| ⭐ {stars_as_int(row['Stars']):,} |"
     )
 
 
@@ -230,7 +230,7 @@ def format_readme_markdown_row(row: dict[str, str], is_new: bool = False) -> str
         f"| {markdown_text(row['Target Input']) or '-'} "
         f"| {markdown_text(row['Description'])} "
         f"| {row['Created']} | {row['Last Update']} "
-        f"| {stars_as_int(row['Stars']):,} ⭐ |"
+        f"| ⭐ {stars_as_int(row['Stars']):,} |"
     )
 
 
@@ -240,11 +240,10 @@ def format_agentic_markdown_row(row: dict[str, str], is_new: bool = False) -> st
     return (
         f"| {project} "
         f"| {markdown_text(row['Target Input']) or '-'} "
-        f"| {markdown_text(row['Categories'])} "
         f"| {markdown_text(row['AI Agent']) or '-'} "
         f"| {markdown_text(row['Description'])} "
         f"| {row['Created']} | {row['Last Update']} "
-        f"| {stars_as_int(row['Stars']):,} ⭐ |"
+        f"| ⭐ {stars_as_int(row['Stars']):,} |"
     )
 
 

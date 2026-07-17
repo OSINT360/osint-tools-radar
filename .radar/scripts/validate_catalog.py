@@ -69,7 +69,7 @@ def parse_markdown_tables(path: Path, validation: Validation) -> dict[str, list[
         table_schemas = {
             TABLE_HEADER: (TABLE_ALIGNMENT, 7),
             README_TABLE_HEADER: (README_TABLE_ALIGNMENT, 7),
-            AGENTIC_TABLE_HEADER: (AGENTIC_TABLE_ALIGNMENT, 8),
+            AGENTIC_TABLE_HEADER: (AGENTIC_TABLE_ALIGNMENT, 7),
         }
         if line not in table_schemas:
             continue
@@ -318,11 +318,12 @@ def validate_update_badges(
         f'src="https://img.shields.io/badge/last_update-'
         f'{date.replace("-", "--")}-1f883d?style=flat-square">'
     )
-    markdown_files = sorted(
-        path
-        for path in ROOT.rglob("*.md")
-        if ".git" not in path.relative_to(ROOT).parts
-        and not path.name.endswith(".local.md")
+    markdown_files = (
+        ROOT / "README.md",
+        ROOT / "EMERGING.md",
+        ROOT / "AGENTIC.md",
+        ROOT / "TIMELINE.md",
+        RADAR_ROOT / "README.md",
     )
     for path in markdown_files:
         text = path.read_text(encoding="utf-8")

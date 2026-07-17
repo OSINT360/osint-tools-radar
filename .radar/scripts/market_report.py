@@ -69,7 +69,7 @@ def build_report() -> str:
     if changes:
         lines.extend(["## Fastest star growth", "", "| Project | Change | Stars | Repository |", "|---|---:|---:|---|"])
         for delta, row in changes[:10]:
-            lines.append(f"| {row['Project']} | {delta:+,} | {integer(row['Stars']):,} | [Source]({row['Repository']}) |")
+            lines.append(f"| {row['Project']} | {delta:+,} | ⭐ {integer(row['Stars']):,} | [Source]({row['Repository']}) |")
         lines.append("")
 
     if recent_candidates:
